@@ -4,7 +4,7 @@ Input: Chemical formula.
 Target variable: Experimentally measured steel yield strengths in MPa.
 Entries: 312
 
-- https://ml.materialsproject.org/projects/matbench_steels
+https://ml.materialsproject.org/projects/matbench_steels
 """
 
 # %%
