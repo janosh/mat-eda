@@ -5,8 +5,8 @@ Target variable(s): Base 10 logarithm of the DFT Voigt-Reuss-Hill average shear 
     and bulk (k_vrh) moduli in GPa.
 Entries: 10987 (each)
 
-- https://ml.materialsproject.org/projects/matbench_log_gvrh
-- https://ml.materialsproject.org/projects/matbench_log_kvrh
+https://ml.materialsproject.org/projects/matbench_log_gvrh
+https://ml.materialsproject.org/projects/matbench_log_kvrh
 """
 
 # %%

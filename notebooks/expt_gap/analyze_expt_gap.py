@@ -4,7 +4,7 @@ Input: Chemical formula.
 Target variable: Experimentally measured band gap (E_g) in eV.
 Entries: 4604
 
-- https://ml.materialsproject.org/projects/matbench_expt_gap
+https://ml.materialsproject.org/projects/matbench_expt_gap
 """
 
 # %%
