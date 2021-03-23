@@ -15,13 +15,17 @@ from time import perf_counter
 import matplotlib.pyplot as plt
 import nglview as nv
 import numpy as np
+import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from mlmatrics import ptable_elemental_prevalence
+from mlmatrics import ptable_elemental_prevalence, spacegroup_hist
 from pymatgen.core.structure import Structure
+from tqdm import tqdm
 
 # %%
 log_gvrh = load_dataframe_from_json("../../data/log_gvrh.json.gz")
 log_kvrh = load_dataframe_from_json("../../data/log_kvrh.json.gz")
+
+tqdm.pandas()
 
 
 # %%
@@ -107,3 +111,23 @@ log_gvrh["formula"] = log_gvrh.structure.apply(lambda struc: struc.formula)
 
 ptable_elemental_prevalence(log_gvrh.formula, log=True)
 plt.savefig("log_gvrh-elements-log.pdf")
+
+
+# %%
+
+# %% getting space group symbols and numbers for 10,987 structures takes about 4 min
+log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.progress_apply(
+    lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
+)
+log_gvrh[["sg_symbol", "sg_number"]].to_csv("space_groups_symbols.csv", index=False)
+
+
+# %%
+log_gvrh[["sg_symbol", "sg_number"]] = pd.read_csv("space_groups_symbols.csv")
+
+
+# %%
+spacegroup_hist(log_gvrh.sg_number)
+plt.savefig("log_gvrh_spacegroups.pdf")
+
+# %%
