@@ -1,24 +1,21 @@
 # %%
 from matminer.datasets import get_available_datasets, load_dataset
+from matminer.utils.io import store_dataframe_as_json
 
 # %%
-get_available_datasets()
+matminer_datasets = get_available_datasets()
+
+matbench_datasets = [dset for dset in matminer_datasets if dset.startswith("matbench_")]
 
 
-# %%
-# https://hackingmaterials.lbl.gov/automatminer/datasets.html#down-loading-datasets
+print(f"{matbench_datasets=} (total: {len(matbench_datasets)})")
+# 13 datasets in Matbench v0.1 as of Mar 2021:
+#   dielectric, expt_gap, expt_is_metal, glass,
+#   jdft2d, log_gvrh, log_kvrh, mp_e_form, mp_gap,
+#   mp_is_metal, perovskites, phonons, steels",
+
+# %% https://hackingmaterials.lbl.gov/automatminer/datasets.html#down-loading-datasets
 # Load all MatBench datasets. Will be cached and faster to load next time.
-
-for dataset in [
-    "matbench_dielectric",
-    "matbench_expt_gap",
-    "matbench_expt_is_metal",
-    "matbench_glass",
-    "matbench_jdft2d",
-    "matbench_log_gvrh",
-    "matbench_log_kvrh",
-    "matbench_mp_e_form",
-    "matbench_mp_gap",
-    "matbench_mp_is_metal",
-]:
-    load_dataset(dataset)
+for dataset in matbench_datasets:
+    df = load_dataset(dataset)
+    store_dataframe_as_json(df, f"../data/{dataset}.json.gz", compression="gz")

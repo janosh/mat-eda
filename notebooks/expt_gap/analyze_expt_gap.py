@@ -17,7 +17,6 @@ that were 1) not marked 'theoretical', 2) had structures matching at least one I
 and 3) were within 200 meV of the DFT-computed stable energy hull (e_above_hull < 0.2 eV).
 Among these candidates, we chose the mp-id with the lowest e_above_hull.
 
-
 https://ml.materialsproject.org/projects/matbench_expt_gap
 """
 
