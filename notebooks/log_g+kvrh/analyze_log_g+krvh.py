@@ -19,6 +19,7 @@ import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
 from mlmatrics import ptable_elemental_prevalence, spacegroup_hist
 from pymatgen.core.structure import Structure
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
 
 # %%
@@ -113,21 +114,32 @@ ptable_elemental_prevalence(log_gvrh.formula, log=True)
 plt.savefig("log_gvrh-elements-log.pdf")
 
 
-# %%
-
 # %% getting space group symbols and numbers for 10,987 structures takes about 4 min
+print("getting spacegroups for log_gvrh")
 log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.progress_apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
-log_gvrh[["sg_symbol", "sg_number"]].to_csv("space_groups_symbols.csv", index=False)
+Structure().get_space_group_info
+print("getting crystal systems for log_gvrh")
+log_gvrh["crystal_system"] = log_gvrh.structure.progress_apply(
+    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+)
+
+log_gvrh[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
+    "additional_cols.csv", index=False
+)
 
 
 # %%
-log_gvrh[["sg_symbol", "sg_number"]] = pd.read_csv("space_groups_symbols.csv")
+log_gvrh[
+    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
+] = pd.read_csv("additional_cols.csv")
 
 
 # %%
 spacegroup_hist(log_gvrh.sg_number)
 plt.savefig("log_gvrh_spacegroups.pdf")
 
+
 # %%
+log_gvrh.crystal_system.value_counts().plot.pie(autopct="%1.1f%%")

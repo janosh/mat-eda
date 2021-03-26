@@ -2,10 +2,10 @@
 
 ## Overview
 
-> MatBench is an [ImageNet](http://www.image-net.org) for materials science; a set of 13 supervised, pre-cleaned, ready-to-use ML tasks for benchmarking and fair comparison. The tasks span a wide domain of inorganic materials science applications.
+> MatBench is an [ImageNet](http://www.image-net.org) for materials science; a set of 13 supervised, pre-cleaned, ready-to-use ML tasks for benchmarking and fair comparison. The tasks span across the domain of inorganic materials science applications.
 
-The datasets in this repo were downloaded from <https://hackingmaterials.lbl.gov/matbench/#all-matbench-datasets>.
-To browse these datasets online, go to <https://ml.materialsproject.org> and login.
+The datasets in this repo are available at <https://hackingmaterials.lbl.gov/matbench/#all-matbench-datasets>.
+To browse these datasets online, go to <https://ml.materialsproject.org> and log in.
 Datasets were originally published in <https://nature.com/articles/s41524-020-00406-3>.
 
 Detailed information about how each dataset was created and prepared for use is available at <https://hackingmaterials.lbl.gov/matminer/dataset_summary.html>
@@ -65,14 +65,18 @@ Detailed information about how each dataset was created and prepared for use is 
 | `matbench_phonons`       | 36.9 cm^-1                         | MEGNet v0.2.2                       | yes, structure only        |
 | `matbench_steels`        | 95.2 MPa                           | Automatminer express v1.0.3.2019111 | yes                        |
 
-## How to load
+## Files of Interest
 
-The simplest way to load this data into memory uses `matminer` (`pip install matminer`):
+Everything in the [`notebooks`](/notebooks) directory.
+
+## How to load Matbench Datasets
+
+The simplest way to load Matbench datasets is with `matminer` (`pip install matminer`):
 
 ```py
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 
-df = load_dataframe_from_json("path/to/dataset.json.gz")
+df = load_dataset("matbench_<dataset_name>")
 ```
 
-This automatically hydrates Pymatgen objects like `Structure` and `Composition`.
+`load_dataset` fetches and caches the dataset locally and automatically hydrates Pymatgen objects like `Structure` and `Composition` in the returned dataframe.

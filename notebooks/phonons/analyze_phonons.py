@@ -12,7 +12,6 @@ in the harmonic approximation based on density functional perturbation theory.
 Removed entries having a formation energy (or energy above the convex hull) more
 than 150meV.
 
-
 https://ml.materialsproject.org/projects/matbench_phonons
 """
 
