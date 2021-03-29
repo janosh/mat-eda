@@ -50,7 +50,7 @@ perovskites.hist(column="volume", bins=50, log=True)
 
 
 # %%
-mpr = MPRester(api_key="X2UaF2zkPMcFhpnMN")
+mpr = MPRester()
 perovskites["likely_mp_ids"] = perovskites.structure.progress_apply(mpr.find_structure)
 
 
@@ -76,27 +76,29 @@ perovskites["crystal_system"] = perovskites.structure.progress_apply(
 )
 
 perovskites[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional_cols.csv", index=False
+    "additional-df-cols.csv", index=False
 )
 
 
 # %%
 perovskites[
     ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional_cols.csv")
+] = pd.read_csv("additional-df-cols.csv")
 
 
 # %%
 spacegroup_hist(perovskites.sg_number)
-plt.savefig("perovskites_spacegroups.pdf")
+plt.savefig("perovskites-spacegroup-hist.pdf")
 
 
 # %%
+plt.title("Crystal systems in Matbench Perovskites")
+
 perovskites["crystal_system"].value_counts().plot.bar()
 plt.xticks(rotation="horizontal")
 annotate_bar_heights(voffset=250)
 
-plt.savefig("crystal_system_counts.pdf")
+plt.savefig("perovskites-crystal-system-counts.pdf")
 
 
 # %%
@@ -110,4 +112,4 @@ perovskites.value_counts(["crystal_system", "sg_number"]).sort_index().plot.pie(
 
 plt.title("Crystal systems and space groups in Matbench Perovskites")
 plt.ylabel(None)
-plt.savefig("crystal_system_pie.pdf")
+plt.savefig("perovskites-crystal-system-pie.pdf")

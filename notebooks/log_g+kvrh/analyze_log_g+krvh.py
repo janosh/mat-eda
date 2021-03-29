@@ -126,19 +126,19 @@ log_gvrh["crystal_system"] = log_gvrh.structure.progress_apply(
 )
 
 log_gvrh[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional_cols.csv", index=False
+    "additional-df-cols.csv", index=False
 )
 
 
 # %%
 log_gvrh[
     ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional_cols.csv")
+] = pd.read_csv("additional-df-cols.csv")
 
 
 # %%
 spacegroup_hist(log_gvrh.sg_number)
-plt.savefig("log_gvrh_spacegroups.pdf")
+plt.savefig("log_gvrh-spacegroup-hist.pdf")
 
 
 # %%

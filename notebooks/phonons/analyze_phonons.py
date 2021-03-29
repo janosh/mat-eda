@@ -19,6 +19,7 @@ https://ml.materialsproject.org/projects/matbench_phonons
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
 from mlmatrics import (
     annotate_bar_heights,
@@ -26,7 +27,11 @@ from mlmatrics import (
     spacegroup_hist,
 )
 from pymatgen.ext.matproj import MPRester
+from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
+
+tqdm.pandas()
+
 
 # %%
 tqdm.pandas()
@@ -40,13 +45,14 @@ plt.savefig("phonons-last-dos-peak-hist.pdf")
 
 # %%
 phonons["formula"] = phonons.structure.apply(lambda cryst: cryst.formula)
+phonons["volume"] = phonons.structure.apply(lambda cryst: cryst.volume)
 
 ptable_elemental_prevalence(phonons.formula, log=True)
 plt.savefig("phonons-elements-log.pdf")
 
 
 # %%
-mpr = MPRester(api_key="X2UaF2zkPMcFhpnMN")
+mpr = MPRester()
 phonons["likely_mp_ids"] = phonons.structure.progress_apply(mpr.find_structure)
 
 
@@ -73,12 +79,13 @@ phonons["likely_mp_id"] = phonons.apply(
 # %%
 store_dataframe_as_json(
     phonons[["structure", "last phdos peak", "likely_mp_id"]],
-    "matbench_phonons_with_mp_id.json.gz",
+    "matbench-phonons-with-mp-id.json.gz",
     compression="gz",
 )
 
 
-# %% check for 5 % of entries that formula of first found and original structures match
+# %% sort of a dumb test but check for 5 % of entries that
+# formulas of first found and original structures match
 for _, (struc, _, id) in phonons.sample(frac=0.05).iterrows():
     print(f"{id=}")
     struc = mpr.get_structure_by_material_id(phonons["likely_mp_id"].iloc[0])
@@ -90,7 +97,21 @@ phonons[["sg_symbol", "sg_number"]] = phonons.progress_apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
 
+phonons["crystal_system"] = phonons.structure.progress_apply(
+    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+)
+
+phonons[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
+    "additional-df-cols.csv", index=False
+)
+
+
+# %%
+phonons[
+    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
+] = pd.read_csv("additional-df-cols.csv")
+
 
 # %%
 spacegroup_hist(phonons.sg_number)
-plt.savefig("phonons_spacegroups.pdf")
+plt.savefig("phonons-spacegroup-hist.pdf")
