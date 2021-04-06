@@ -16,7 +16,7 @@ https://ml.materialsproject.org/projects/matbench_dielectric
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from mlmatrics import ptable_elemental_prevalence, spacegroup_hist
+from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
 
@@ -35,6 +35,7 @@ dielectric["volume"] = dielectric.structure.apply(lambda cryst: cryst.volume)
 dielectric["formula"] = dielectric.structure.apply(lambda cryst: cryst.formula)
 
 ptable_elemental_prevalence(dielectric.formula, log=True)
+plt.title("Elemental prevalence in the Matbench dieletric dataset")
 plt.savefig("dielectric-elements-log.pdf")
 
 
@@ -64,10 +65,10 @@ plt.savefig("dielectric-spacegroup-hist.pdf")
 
 
 # %%
-plt.title("Crystal systems in Matbench dielectric")
 dielectric.value_counts("crystal_system").plot.pie(
     autopct=lambda val: f"{val:.1f}% ({int(round(val * len(dielectric) / 100)):,})"
 )
+plt.title("Crystal systems in Matbench dielectric")
 
 plt.yticks(None)
 plt.xlabel(f"{len(dielectric):,} total samples")

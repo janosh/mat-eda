@@ -80,3 +80,7 @@ df = load_dataset("matbench_<dataset_name>")
 ```
 
 `load_dataset` fetches and caches the dataset locally and automatically hydrates Pymatgen objects like `Structure` and `Composition` in the returned dataframe.
+
+## Interesting Datasets in MPContribs
+
+- [**Electronic Transport Properties** by F. Ricci et al.](https://contribs.materialsproject.org/projects/carrier_transport) contains 48,000 DFT Seebeck coefficients ([Paper](https://nature.com/articles/sdata201785))

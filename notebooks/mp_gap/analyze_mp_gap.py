@@ -10,7 +10,7 @@ https://ml.materialsproject.org/projects/matbench_mp_gap
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
-from mlmatrics import ptable_elemental_prevalence
+from ml_matrics import ptable_elemental_prevalence
 
 # %%
 mp_gap = load_dataframe_from_json("../../data/mp_gap.json.gz")
@@ -33,6 +33,7 @@ mp_gap["formula"] = mp_gap.structure.apply(lambda cryst: cryst.formula)
 
 # %%
 ptable_elemental_prevalence(mp_gap.formula, log=True)
+plt.title("Elemental prevalence in the Matbench MP band gap dataset")
 plt.savefig("mp_gap-elements-log.pdf")
 
 

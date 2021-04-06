@@ -19,3 +19,8 @@ print(f"{matbench_datasets=} (total: {len(matbench_datasets)})")
 for dataset in matbench_datasets:
     df = load_dataset(dataset)
     store_dataframe_as_json(df, f"../data/{dataset}.json.gz", compression="gz")
+
+
+# %%
+df = load_dataset("boltztrap_mp")
+store_dataframe_as_json(df, "../data/boltztrap_mp.json.gz", compression="gz")

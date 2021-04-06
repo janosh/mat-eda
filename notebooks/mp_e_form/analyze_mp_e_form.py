@@ -14,7 +14,7 @@ https://ml.materialsproject.org/projects/matbench_mp_e_form
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
-from mlmatrics import ptable_elemental_prevalence
+from ml_matrics import ptable_elemental_prevalence
 
 # %%
 mp_e_form = load_dataframe_from_json("../../data/mp_e_form.json.gz")
@@ -31,4 +31,5 @@ mp_e_form["formula"] = mp_e_form.structure.apply(lambda struc: struc.formula)
 
 # %%
 ptable_elemental_prevalence(mp_e_form.formula, log=True)
+plt.title("Elemental prevalence in the Matbench formation energy dataset")
 plt.savefig("mp_e_form-elements-log.pdf")

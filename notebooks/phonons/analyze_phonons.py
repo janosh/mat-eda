@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
-from mlmatrics import (
+from ml_matrics import (
     annotate_bar_heights,
     ptable_elemental_prevalence,
     spacegroup_hist,
@@ -48,6 +48,7 @@ phonons["formula"] = phonons.structure.apply(lambda cryst: cryst.formula)
 phonons["volume"] = phonons.structure.apply(lambda cryst: cryst.volume)
 
 ptable_elemental_prevalence(phonons.formula, log=True)
+plt.title("Elemental prevalence in the Matbench phonons dataset")
 plt.savefig("phonons-elements-log.pdf")
 
 
