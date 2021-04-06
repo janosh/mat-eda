@@ -4,3 +4,4 @@ matplotlib
 pandas
 matminer
 nglview
+ml_matrics
