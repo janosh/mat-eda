@@ -12,19 +12,21 @@ Detailed information about how each dataset was created and prepared for use is 
 
 ## Full list of the 13 Matbench datasets in v0.1
 
-| task name                | target column (unit)         | number of samples | task type      | links                             |
-| ------------------------ | ---------------------------- | ----------------- | -------------- | --------------------------------- |
-| `matbench_dielectric`    | `n` (unitless)               | 4764              | regression     | [download][1], [interactive][2]   |
-| `matbench_expt_gap`      | `gap expt` (eV)              | 4604              | regression     | [download][3], [interactive][4]   |
-| `matbench_expt_is_metal` | `is_metal` (unitless)        | 4921              | classification | [download][5], [interactive][6]   |
-| `matbench_glass`         | `gfa` (unitless)             | 5680              | classification | [download][7], [interactive][8]   |
-| `matbench_jdft2d`        | `exfoliation_en` (meV/atom)  | 636               | regression     | [download][9], [interactive][10]  |
-| `matbench_log_gvrh`      | `log10(G_VRH)` (log(GPa))    | 10987             | regression     | [download][11], [interactive][12] |
-| `matbench_log_kvrh`      | `log10(K_VRH)` (log(GPa))    | 10987             | regression     | [download][13], [interactive][14] |
-| `matbench_mp_e_form`     | `e_form` (eV/atom)           | 132752            | regression     | [download][15], [interactive][16] |
-| `matbench_mp_gap`        | `gap pbe` (eV)               | 106113            | regression     | [download][17], [interactive][18] |
-| `matbench_mp_is_metal`   | `is_metal` (unitless)        | 106113            | classification | [download][19], [interactive][20] |
-| `matbench_perovskites`   | `e_form` (eV, per unit cell) | 18928             | regression     | [download][19], [interactive][20] |
+| task name                | target column (unit)         | sample count | task type      | input       | links                             |
+| ------------------------ | ---------------------------- | ------------ | -------------- | ----------- | --------------------------------- |
+| `matbench_dielectric`    | `n` (unitless)               | 4764         | regression     | structure   | [download][1], [interactive][2]   |
+| `matbench_expt_gap`      | `gap expt` (eV)              | 4604         | regression     | composition | [download][3], [interactive][4]   |
+| `matbench_expt_is_metal` | `is_metal` (unitless)        | 4921         | classification | composition | [download][5], [interactive][6]   |
+| `matbench_glass`         | `gfa` (unitless)             | 5680         | classification | composition | [download][7], [interactive][8]   |
+| `matbench_jdft2d`        | `exfoliation_en` (meV/atom)  | 636          | regression     | structure   | [download][9], [interactive][10]  |
+| `matbench_log_gvrh`      | `log10(G_VRH)` (log(GPa))    | 10987        | regression     | structure   | [download][11], [interactive][12] |
+| `matbench_log_kvrh`      | `log10(K_VRH)` (log(GPa))    | 10987        | regression     | structure   | [download][13], [interactive][14] |
+| `matbench_mp_e_form`     | `e_form` (eV/atom)           | 132752       | regression     | structure   | [download][15], [interactive][16] |
+| `matbench_mp_gap`        | `gap pbe` (eV)               | 106113       | regression     | structure   | [download][17], [interactive][18] |
+| `matbench_mp_is_metal`   | `is_metal` (unitless)        | 106113       | classification | structure   | [download][19], [interactive][20] |
+| `matbench_perovskites`   | `e_form` (eV, per unit cell) | 18928        | regression     | structure   | [download][21], [interactive][22] |
+| `matbench_phonons`       | `last phdos peak` (1/cm)     | 1265         | regression     | structure   | [download][23], [interactive][24] |
+| `matbench_steels`        | `yield strength` (MPa)       | 312          | regression     | composition | [download][25], [interactive][26] |
 
 [1]: https://ml.materialsproject.org/projects/matbench_dielectric.json.gz
 [2]: https://ml.materialsproject.org/projects/matbench_dielectric
@@ -46,6 +48,12 @@ Detailed information about how each dataset was created and prepared for use is 
 [18]: https://ml.materialsproject.org/projects/matbench_mp_gap
 [19]: https://ml.materialsproject.org/projects/matbench_mp_is_metal.json.gz
 [20]: https://ml.materialsproject.org/projects/matbench_mp_is_metal
+[21]: https://ml.materialsproject.org/projects/matbench_perovskites.json.gz
+[22]: https://ml.materialsproject.org/projects/matbench_perovskites
+[23]: https://ml.materialsproject.org/projects/matbench_phonons.json.gz
+[24]: https://ml.materialsproject.org/projects/matbench_phonons
+[25]: https://ml.materialsproject.org/projects/matbench_steels.json.gz
+[26]: https://ml.materialsproject.org/projects/matbench_steels
 
 ## Leaderboard
 
