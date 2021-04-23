@@ -91,4 +91,4 @@ df = load_dataset("matbench_<dataset_name>")
 
 ## Interesting Datasets in MPContribs
 
-- [**Electronic Transport Properties** by F. Ricci et al.](https://contribs.materialsproject.org/projects/carrier_transport) contains 48,000 DFT Seebeck coefficients ([Paper](https://nature.com/articles/sdata201785))
+- [**Electronic Transport Properties** by F. Ricci et al.](https://contribs.materialsproject.org/projects/carrier_transport) contains 48,000 DFT Seebeck coefficients ([Paper](https://nature.com/articles/sdata201785)). [[Download link](https://contribs.materialsproject.org/projects/carrier_transport.json.gz) (from [here](https://git.io/JOMwY))].

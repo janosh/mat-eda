@@ -1,9 +1,11 @@
 """Stats for the Electronic Transport Properties dataset.
 
+Larger/complete version of BoltzTrap MP (data/boltztrap_mp.json.gz).
+
 https://contribs.materialsproject.org/projects/carrier_transport
 
 Available from https://contribs.materialsproject.org/projects/carrier_transport.json.gz
-(see https://github.com/hackingmaterials/matminer/issues/606#issuecomment-819915362).
+(see https://git.io/JOMwY).
 
 Reference:
 Ricci, F. et al. An ab initio electronic transport database for inorganic materials.
@@ -23,7 +25,7 @@ from ml_matrics import ptable_elemental_prevalence
 carrier_transport = load_dataframe_from_json(
     "../../data/carrier_transport_with_strucs.json.gz"
 )
-
+carrier_transport.index.name = "mp_id"
 
 # %%
 ptable_elemental_prevalence(carrier_transport.pretty_formula.dropna(), log=True)
