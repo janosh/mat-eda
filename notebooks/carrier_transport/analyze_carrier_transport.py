@@ -1,9 +1,11 @@
 """Stats for the Electronic Transport Properties dataset.
 
+Larger/complete version of BoltzTrap MP (data/boltztrap_mp.json.gz).
+
 https://contribs.materialsproject.org/projects/carrier_transport
 
 Available from https://contribs.materialsproject.org/projects/carrier_transport.json.gz
-(see https://github.com/hackingmaterials/matminer/issues/606#issuecomment-819915362).
+(see https://git.io/JOMwY).
 
 Reference:
 Ricci, F. et al. An ab initio electronic transport database for inorganic materials.
@@ -16,14 +18,15 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
 
 # %%
 import matplotlib.pyplot as plt
+import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence
+from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
 
 # %%
 carrier_transport = load_dataframe_from_json(
     "../../data/carrier_transport_with_strucs.json.gz"
 )
-
+carrier_transport.index.name = "mp_id"
 
 # %%
 ptable_elemental_prevalence(carrier_transport.pretty_formula.dropna(), log=True)
@@ -70,3 +73,23 @@ carrier_transport[dependent_vars].hist(bins=50, log=True, figsize=[30, 16])
 plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset dependent variables", y=1.05)
 plt.savefig("carrier_transport-hists-dependent-vars.pdf")
+
+
+# %%
+# getting space group symbols and numbers takes about 2 min
+# carrier_transport[["sg_symbol", "sg_number"]] = carrier_transport.apply(
+#     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
+# )
+
+
+# carrier_transport[["sg_symbol", "sg_number"]].to_csv("spacegroup-cols.csv")
+
+
+# %%
+carrier_transport[["sg_symbol", "sg_number"]] = pd.read_csv("spacegroup-cols.csv")
+
+
+# %%
+spacegroup_hist(carrier_transport.sg_number)
+plt.title("Spacegroup distribution in the Ricci carrier transport dataset")
+plt.savefig("carrier_transport-spacegroup-hist.pdf")

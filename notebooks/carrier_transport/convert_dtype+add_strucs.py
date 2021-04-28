@@ -6,35 +6,31 @@ from pymatgen.ext.matproj import MPRester
 # %%
 carrier_transport = load_dataframe_from_json("../../data/carrier_transport.json.gz")
 
-
 # %%
 carrier_transport = pd.concat(
     [carrier_transport, pd.json_normalize(carrier_transport.data)], axis=1
 ).drop(columns=["data", "is_public", "project"])
 
+carrier_transport.set_index("identifier", inplace=True)
+carrier_transport.index.name = "mp_id"
+
 
 # %%
 with MPRester() as mpr:
     strucs = mpr.query(
-        {"material_id": {"$in": carrier_transport.identifier.to_list()}},
-        ["material_id", "task_id", "structure"],
+        {"task_ids": {"$in": carrier_transport.index.to_list()}},
+        ["task_ids", "structure"],
     )
 
 
 # %%
-struc_df = pd.DataFrame(strucs).set_index("material_id")
+# get a map from task ID to its structure
+struc_df = pd.DataFrame(strucs).explode("task_ids").set_index("task_ids")
+
 carrier_transport[struc_df.columns] = struc_df
 
 carrier_transport["formula"] = carrier_transport.structure.apply(
     lambda struc: struc.formula
-)
-
-
-# %%
-store_dataframe_as_json(
-    carrier_transport,
-    "../../data/carrier_transport_with_strucs.json.gz",
-    compression="gz",
 )
 
 
@@ -89,3 +85,11 @@ carrier_transport.rename(columns=col_map, inplace=True)
 # %% convert all target columns to dtype float
 for col, vals in carrier_transport[col_map.values()].items():
     carrier_transport[col] = vals.str.replace(r"[^\d.]", "", regex=True).astype(float)
+
+
+# %%
+store_dataframe_as_json(
+    carrier_transport,
+    "../../data/carrier_transport_with_strucs.json.gz",
+    compression="gz",
+)

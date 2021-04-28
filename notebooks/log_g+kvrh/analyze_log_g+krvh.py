@@ -120,7 +120,7 @@ print("getting spacegroups for log_gvrh")
 log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.progress_apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
-Structure().get_space_group_info
+
 print("getting crystal systems for log_gvrh")
 log_gvrh["crystal_system"] = log_gvrh.structure.progress_apply(
     lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
