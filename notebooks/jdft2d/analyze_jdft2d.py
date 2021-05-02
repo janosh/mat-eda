@@ -20,6 +20,7 @@ from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
 
+
 # %%
 tqdm.pandas()
 (jdft2d := load_dataframe_from_json("../../data/jdft2d.json.gz"))

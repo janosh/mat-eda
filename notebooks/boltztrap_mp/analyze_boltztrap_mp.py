@@ -26,10 +26,12 @@ Dryad Digital Repository. https://doi.org/10.5061/dryad.gn001
 https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
 """
 
+
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
 from ml_matrics import ptable_elemental_prevalence
+
 
 # %%
 (boltztrap_mp := load_dataframe_from_json("../../data/boltztrap_mp.json.gz"))

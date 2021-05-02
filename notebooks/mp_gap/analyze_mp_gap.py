@@ -7,10 +7,12 @@ Entries: 106113
 https://ml.materialsproject.org/projects/matbench_mp_gap
 """
 
+
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
 from ml_matrics import ptable_elemental_prevalence
+
 
 # %%
 mp_gap = load_dataframe_from_json("../../data/mp_gap.json.gz")
