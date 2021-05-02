@@ -3,8 +3,10 @@ import pandas as pd
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
 from pymatgen.ext.matproj import MPRester
 
+
 # %%
 carrier_transport = load_dataframe_from_json("../../data/carrier_transport.json.gz")
+
 
 # %%
 carrier_transport = pd.concat(

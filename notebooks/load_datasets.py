@@ -2,6 +2,7 @@
 from matminer.datasets import get_available_datasets, load_dataset
 from matminer.utils.io import store_dataframe_as_json
 
+
 # %%
 matminer_datasets = get_available_datasets()
 
@@ -13,6 +14,7 @@ print(f"total datasets = {len(matbench_datasets)}\n{matbench_datasets=}")
 #   dielectric, expt_gap, expt_is_metal, glass,
 #   jdft2d, log_gvrh, log_kvrh, mp_e_form, mp_gap,
 #   mp_is_metal, perovskites, phonons, steels",
+
 
 # %% https://hackingmaterials.lbl.gov/automatminer/datasets.html#down-loading-datasets
 # Load all MatBench datasets. Will be cached and faster to load next time.

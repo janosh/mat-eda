@@ -22,11 +22,13 @@ import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
 from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
 
+
 # %%
 carrier_transport = load_dataframe_from_json(
     "../../data/carrier_transport_with_strucs.json.gz"
 )
 carrier_transport.index.name = "mp_id"
+
 
 # %%
 ptable_elemental_prevalence(carrier_transport.pretty_formula.dropna(), log=True)
