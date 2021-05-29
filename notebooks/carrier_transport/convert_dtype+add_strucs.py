@@ -1,3 +1,6 @@
+"""Unprocessed data in data/carrier_transport.json.gz obtained from https://git.io/JOMwY."""
+
+
 # %%
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
@@ -5,7 +8,9 @@ from pymatgen.ext.matproj import MPRester
 
 
 # %%
-carrier_transport = load_dataframe_from_json("../../data/carrier_transport.json.gz")
+carrier_transport = load_dataframe_from_json(
+    "../../data/raw_ricci_carrier_transport.json.gz"
+)
 
 
 # %%
@@ -31,13 +36,14 @@ struc_df = pd.DataFrame(strucs).explode("task_ids").set_index("task_ids")
 
 carrier_transport[struc_df.columns] = struc_df
 
-carrier_transport["formula"] = carrier_transport.structure.apply(
-    lambda struc: struc.formula
-)
+carrier_transport["pretty_formula"] = [
+    struc.formula for struc in carrier_transport.structure
+]
 
 
 # %% move all units from rows to header
 col_map = {
+    "type": "functional",
     "ΔE": "ΔE [eV]",
     "V": "V [Å³]",
     "S.p": "S.p [µV/K]",
@@ -85,13 +91,18 @@ carrier_transport.rename(columns=col_map, inplace=True)
 
 
 # %% convert all target columns to dtype float
+units = ["Å³", "µV/K", "cm⁻³", "1/Ω/m/s", "K", "µW/cm/K²/s", "mₑ", "eV", "W/K/m/s"]
+
+
 for col, vals in carrier_transport[col_map.values()].items():
-    carrier_transport[col] = vals.str.replace(r"[^\d.]", "", regex=True).astype(float)
+    carrier_transport[col] = vals.str.replace("|".join(units), "", regex=True).astype(
+        float
+    )
 
 
 # %%
 store_dataframe_as_json(
     carrier_transport,
-    "../../data/carrier_transport_with_strucs.json.gz",
+    "../../data/ricci_boltztrap_carrier_transport.json.gz",
     compression="gz",
 )
