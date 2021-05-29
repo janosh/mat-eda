@@ -4,7 +4,8 @@ Larger/complete version of BoltzTrap MP (data/boltztrap_mp.json.gz).
 
 https://contribs.materialsproject.org/projects/carrier_transport
 
-Available from https://contribs.materialsproject.org/projects/carrier_transport.json.gz
+Unprocessed data available from
+https://contribs.materialsproject.org/projects/carrier_transport.json.gz
 (see https://git.io/JOMwY).
 
 Reference:
@@ -12,7 +13,8 @@ Ricci, F. et al. An ab initio electronic transport database for inorganic materi
 https://nature.com/articles/sdata201785
 Dryad Digital Repository. https://doi.org/10.5061/dryad.gn001
 
-https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
+Extensive column descriptions and metadata at
+https://hackingmaterials.lbl.gov/matminer/dataset_summary.html#ricci-boltztrap-mp-tabular.
 """
 
 
@@ -25,22 +27,21 @@ from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
 
 # %%
 carrier_transport = load_dataframe_from_json(
-    "../../data/carrier_transport_with_strucs.json.gz"
+    "../../data/ricci_boltztrap_carrier_transport.json.gz"
 )
-carrier_transport.index.name = "mp_id"
 
 
 # %%
 ptable_elemental_prevalence(carrier_transport.pretty_formula.dropna(), log=True)
 plt.title("Elemental prevalence in the Ricci Carrier Transport dataset")
-plt.savefig("carrier_transport-elements-log.pdf")
+plt.savefig("carrier-transport-elements-log.pdf")
 
 
 # %%
 carrier_transport.hist(bins=50, log=True, figsize=[30, 16])
 plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset", y=1.05)
-plt.savefig("carrier_transport-hists.pdf")
+plt.savefig("carrier-transport-hists.pdf")
 
 
 # %%
@@ -48,7 +49,7 @@ carrier_transport[["S.p [µV/K]", "S.n [µV/K]"]].hist(bins=50, log=True, figsiz
 plt.suptitle(
     "Ricci Carrier Transport dataset histograms for n- and p-type Seebeck coefficients"
 )
-plt.savefig("carrier_transport-seebeck-n+p.pdf")
+plt.savefig("carrier-transport-seebeck-n+p.pdf")
 
 
 # %%
@@ -74,7 +75,7 @@ dependent_vars = [
 carrier_transport[dependent_vars].hist(bins=50, log=True, figsize=[30, 16])
 plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset dependent variables", y=1.05)
-plt.savefig("carrier_transport-hists-dependent-vars.pdf")
+plt.savefig("carrier-transport-hists-dependent-vars.pdf")
 
 
 # %%
@@ -94,4 +95,4 @@ carrier_transport[["sg_symbol", "sg_number"]] = pd.read_csv("spacegroup-cols.csv
 # %%
 spacegroup_hist(carrier_transport.sg_number)
 plt.title("Spacegroup distribution in the Ricci carrier transport dataset")
-plt.savefig("carrier_transport-spacegroup-hist.pdf")
+plt.savefig("carrier-transport-spacegroup-hist.pdf")
