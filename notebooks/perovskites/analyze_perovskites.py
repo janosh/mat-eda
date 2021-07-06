@@ -95,7 +95,6 @@ plt.savefig("perovskites-spacegroup-hist.pdf")
 
 
 # %%
-
 perovskites["crystal_system"].value_counts().plot.bar()
 
 plt.title("Crystal systems in Matbench Perovskites")
