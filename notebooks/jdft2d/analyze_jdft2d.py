@@ -16,7 +16,7 @@ https://ml.materialsproject.org/projects/matbench_jdft2d
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
+from ml_matrics import ptable_heatmap, spacegroup_hist
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
 
@@ -35,7 +35,7 @@ plt.savefig("jdft2d-last-dos-peak-hist.pdf")
 jdft2d["volume"] = jdft2d.structure.apply(lambda cryst: cryst.volume)
 jdft2d["formula"] = jdft2d.structure.apply(lambda cryst: cryst.formula)
 
-ptable_elemental_prevalence(jdft2d.formula, log=True)
+ptable_heatmap(jdft2d.formula, log=True)
 plt.title("Elemental prevalence in the Matbench Jarvis DFT 2D dataset")
 plt.savefig("jdft2d-elements-log.pdf")
 

@@ -30,7 +30,7 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence
+from ml_matrics import ptable_heatmap
 
 
 # %%
@@ -38,13 +38,13 @@ from ml_matrics import ptable_elemental_prevalence
 
 
 # %%
-ptable_elemental_prevalence(boltztrap_mp.formula, log=True)
+ptable_heatmap(boltztrap_mp.formula, log=True)
 plt.title("Elemental prevalence in the BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-elements-log.pdf")
 
 
 # %%
-ptable_elemental_prevalence(boltztrap_mp.sort_values("pf_n").tail(100).formula)
+ptable_heatmap(boltztrap_mp.sort_values("pf_n").tail(100).formula)
 plt.title("Elemental prevalence of top 100 n-type powerfactors in BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-elements-top-100-nPF.pdf")
 

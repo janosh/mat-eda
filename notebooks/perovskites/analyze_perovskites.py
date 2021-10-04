@@ -18,11 +18,7 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import (
-    annotate_bar_heights,
-    ptable_elemental_prevalence,
-    spacegroup_hist,
-)
+from ml_matrics import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from pymatgen.ext.matproj import MPRester
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
@@ -41,7 +37,7 @@ plt.savefig("perovskites-e_form-hist.pdf")
 # %%
 perovskites["formula"] = perovskites.structure.apply(lambda cryst: cryst.formula)
 
-ptable_elemental_prevalence(perovskites.formula, log=True)
+ptable_heatmap(perovskites.formula, log=True)
 plt.title("Elemental prevalence in the Matbench perovskites dataset")
 plt.savefig("perovskites-elements-log.pdf")
 
