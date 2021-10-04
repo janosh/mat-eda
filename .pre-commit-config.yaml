@@ -9,20 +9,44 @@ repos:
     rev: 5.9.1
     hooks:
       - id: isort
+
   - repo: https://github.com/psf/black
     rev: 21.6b0
     hooks:
       - id: black
+
   - repo: https://github.com/PyCQA/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
+
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.20.0
     hooks:
       - id: pyupgrade
         args: [--py38-plus]
+
   - repo: https://github.com/janosh/format-ipy-cells
     rev: v0.1.5
     hooks:
       - id: format-ipy-cells
+
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.11.0
+    hooks:
+    - id: markdownlint
+      # MD013: Line length
+      # MD033: Inline HTML
+      args: [-r, '~MD013,~MD033']
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: check-case-conflict
+      - id: check-symlinks
+      - id: check-yaml
+      - id: destroyed-symlinks
+      - id: end-of-file-fixer
+        exclude: ^assets/.+\.svg$
+      - id: mixed-line-ending
+      - id: trailing-whitespace
