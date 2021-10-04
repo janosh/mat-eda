@@ -18,8 +18,8 @@ import nglview as nv
 import numpy as np
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
-from pymatgen.core.structure import Structure
+from ml_matrics import ptable_heatmap, spacegroup_hist
+from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from tqdm import tqdm
 
@@ -112,7 +112,7 @@ log_gvrh.hist(column="volume", bins=50, log=True)
 # %%
 log_gvrh["formula"] = log_gvrh.structure.apply(lambda struc: struc.formula)
 
-ptable_elemental_prevalence(log_gvrh.formula, log=True)
+ptable_heatmap(log_gvrh.formula, log=True)
 plt.title("Elemental prevalence in the Matbench bulk/shear modulus datasets")
 plt.savefig("log_gvrh-elements-log.pdf")
 

@@ -24,7 +24,7 @@ https://ml.materialsproject.org/projects/matbench_expt_gap
 # %%
 import matplotlib.pyplot as plt
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence
+from ml_matrics import ptable_heatmap
 
 
 # %%
@@ -37,6 +37,6 @@ plt.savefig("expt_gap_hist.pdf")
 
 
 # %%
-ptable_elemental_prevalence(expt_gap.composition, log=True)
+ptable_heatmap(expt_gap.composition, log=True)
 plt.title("Elemental prevalence in the Matbench experimental band gap dataset")
 plt.savefig("expt_gap-elements-log.pdf")

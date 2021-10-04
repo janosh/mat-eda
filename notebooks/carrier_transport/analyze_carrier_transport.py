@@ -22,7 +22,7 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html#ricci-boltztrap-m
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.utils.io import load_dataframe_from_json
-from ml_matrics import ptable_elemental_prevalence, spacegroup_hist
+from ml_matrics import ptable_heatmap, spacegroup_hist
 
 
 # %%
@@ -32,7 +32,7 @@ carrier_transport = load_dataframe_from_json(
 
 
 # %%
-ptable_elemental_prevalence(carrier_transport.pretty_formula.dropna(), log=True)
+ptable_heatmap(carrier_transport.pretty_formula.dropna(), log=True)
 plt.title("Elemental prevalence in the Ricci Carrier Transport dataset")
 plt.savefig("carrier-transport-elements-log.pdf")
 
