@@ -46,7 +46,7 @@ jdft2d[["sg_symbol", "sg_number"]] = jdft2d.progress_apply(
 )
 
 jdft2d["crystal_system"] = jdft2d.structure.progress_apply(
-    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
 
 jdft2d[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(

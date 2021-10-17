@@ -37,7 +37,7 @@ struc_df = pd.DataFrame(strucs).explode("task_ids").set_index("task_ids")
 carrier_transport[struc_df.columns] = struc_df
 
 carrier_transport["pretty_formula"] = [
-    struc.formula for struc in carrier_transport.structure
+    struct.formula for struct in carrier_transport.structure
 ]
 
 

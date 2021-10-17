@@ -1,7 +1,7 @@
-numpy
-pymatgen
-matplotlib
-pandas
 matminer
-nglview
+matplotlib
 ml_matrics
+nglview
+numpy
+pandas
+pymatgen

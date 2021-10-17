@@ -43,7 +43,7 @@ plt.savefig("perovskites-elements-log.pdf")
 
 
 # %%
-perovskites["volume"] = perovskites.structure.apply(lambda struc: struc.volume)
+perovskites["volume"] = perovskites.structure.apply(lambda struct: struct.volume)
 
 perovskites.hist(column="volume", bins=50, log=True)
 
@@ -71,7 +71,7 @@ perovskites[["sg_symbol", "sg_number"]] = perovskites.progress_apply(
 )
 
 perovskites["crystal_system"] = perovskites.structure.progress_apply(
-    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
 
 perovskites[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(

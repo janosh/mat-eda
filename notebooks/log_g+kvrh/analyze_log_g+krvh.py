@@ -49,7 +49,7 @@ plt.savefig("log_g+kvrh-target-hist.pdf")
 
 
 # %%
-log_gvrh["volume"] = log_gvrh.structure.apply(lambda struc: struc.volume)
+log_gvrh["volume"] = log_gvrh.structure.apply(lambda struct: struct.volume)
 
 log_gvrh.hist(column="volume", bins=50, log=True, alpha=0.8)
 plt.savefig("log_gvrh-volume-hist.pdf")
@@ -104,13 +104,13 @@ view
 
 
 # %%
-log_gvrh["volume"] = log_gvrh.structure.apply(lambda struc: struc.volume)
+log_gvrh["volume"] = log_gvrh.structure.apply(lambda struct: struct.volume)
 
 log_gvrh.hist(column="volume", bins=50, log=True)
 
 
 # %%
-log_gvrh["formula"] = log_gvrh.structure.apply(lambda struc: struc.formula)
+log_gvrh["formula"] = log_gvrh.structure.apply(lambda struct: struct.formula)
 
 ptable_heatmap(log_gvrh.formula, log=True)
 plt.title("Elemental prevalence in the Matbench bulk/shear modulus datasets")
@@ -125,7 +125,7 @@ log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.progress_apply(
 
 print("getting crystal systems for log_gvrh")
 log_gvrh["crystal_system"] = log_gvrh.structure.progress_apply(
-    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
 
 log_gvrh[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(

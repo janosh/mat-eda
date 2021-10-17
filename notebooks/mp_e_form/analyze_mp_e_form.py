@@ -28,7 +28,7 @@ plt.savefig("mp_e_form_hist.pdf")
 
 
 # %%
-mp_e_form["formula"] = mp_e_form.structure.apply(lambda struc: struc.formula)
+mp_e_form["formula"] = mp_e_form.structure.apply(lambda struct: struct.formula)
 
 
 # %%

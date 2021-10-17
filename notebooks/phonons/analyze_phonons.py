@@ -84,10 +84,10 @@ store_dataframe_as_json(
 
 # %% sort of a dumb test but check for 5 % of entries that
 # formulas of first found and original structures match
-for _, (struc, _, id) in phonons.sample(frac=0.05).iterrows():
+for _, (struct, _, id) in phonons.sample(frac=0.05).iterrows():
     print(f"{id=}")
-    struc = mpr.get_structure_by_material_id(phonons["likely_mp_id"].iloc[0])
-    assert struc.formula == phonons.structure.iloc[0].formula
+    struct = mpr.get_structure_by_material_id(phonons["likely_mp_id"].iloc[0])
+    assert struct.formula == phonons.structure.iloc[0].formula
 
 
 # %%
@@ -96,7 +96,7 @@ phonons[["sg_symbol", "sg_number"]] = phonons.progress_apply(
 )
 
 phonons["crystal_system"] = phonons.structure.progress_apply(
-    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
 
 phonons[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(

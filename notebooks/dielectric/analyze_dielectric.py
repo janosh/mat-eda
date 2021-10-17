@@ -46,7 +46,7 @@ dielectric[["sg_symbol", "sg_number"]] = dielectric.progress_apply(
 )
 
 dielectric["crystal_system"] = dielectric.structure.progress_apply(
-    lambda struc: SpacegroupAnalyzer(struc).get_crystal_system()
+    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
 
 dielectric[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
@@ -67,7 +67,7 @@ plt.savefig("dielectric-spacegroup-hist.pdf")
 
 # %%
 dielectric.value_counts("crystal_system").plot.pie(
-    autopct=lambda val: f"{val:.1f}% ({int(round(val * len(dielectric) / 100)):,})"
+    autopct=lambda val: f"{val:.1f}% ({round(val * len(dielectric) / 100):,})"
 )
 plt.title("Crystal systems in Matbench dielectric")
 
