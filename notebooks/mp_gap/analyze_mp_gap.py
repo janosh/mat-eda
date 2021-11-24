@@ -1,7 +1,8 @@
 """Stats for the matbench_mp_gap dataset.
 
 Input: Pymatgen Structure of the material.
-Target variable: The band gap (E_g) as calculated by PBE DFT from the Materials Project in eV.
+Target variable: The band gap (E_g) as calculated by PBE DFT from the Materials Project
+    in eV.
 Entries: 106113
 
 https://ml.materialsproject.org/projects/matbench_mp_gap

@@ -12,10 +12,11 @@ value to the mean experimental value for that composition among all reports.
 
 To get likely MP IDs for each chemical formula, see https://git.io/JmpVe:
 
-Likely mp-ids were chosen from among computed materials in the MP database (version 2021.03)
-that were 1) not marked 'theoretical', 2) had structures matching at least one ICSD material,
-and 3) were within 200 meV of the DFT-computed stable energy hull (e_above_hull < 0.2 eV).
-Among these candidates, we chose the mp-id with the lowest e_above_hull.
+Likely mp-ids were chosen from among computed materials in the MP database
+(version 2021.03) that were 1) not marked 'theoretical', 2) had structures matching at
+least one ICSD material, and 3) were within 200 meV of the DFT-computed stable energy
+hull (e_above_hull < 0.2 eV). Among these candidates, we chose the mp-id with the lowest
+e_above_hull.
 
 https://ml.materialsproject.org/projects/matbench_expt_gap
 """

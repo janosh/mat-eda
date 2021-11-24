@@ -60,7 +60,7 @@ annotate_bar_heights()
 plt.savefig("likely_mp_ids_lens.png", dpi=200)
 
 
-# %% where there are several mp_ids, pick the one with lowest energy above the convex hull
+# %% where there are several mp_ids, pick the one with lowest energy above convex hull
 def get_e_above_hull(mp_id):
     return mpr.query(mp_id, ["e_above_hull"])["e_above_hull"]
 

@@ -4,8 +4,8 @@ Input: Pymatgen Structure of the material.
 Target variable: Exfoliation energy (meV).
 Entries: 636
 
-Matbench v0.1 dataset for predicting exfoliation energies from crystal structure (computed
-with the OptB88vdW and TBmBJ functionals). Adapted from the JARVIS DFT database.
+Matbench v0.1 dataset for predicting exfoliation energies from crystal structure
+(computed with the OptB88vdW and TBmBJ functionals). Adapted from the JARVIS DFT DB.
 
 
 https://ml.materialsproject.org/projects/matbench_jdft2d
