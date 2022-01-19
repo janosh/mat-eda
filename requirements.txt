@@ -5,3 +5,4 @@ nglview
 numpy
 pandas
 pymatgen
+tqdm

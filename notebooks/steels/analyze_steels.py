@@ -10,12 +10,12 @@ https://ml.materialsproject.org/projects/matbench_steels
 
 # %%
 import matplotlib.pyplot as plt
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 from ml_matrics import ptable_heatmap
 
 
 # %%
-steels = load_dataframe_from_json("../../data/steels.json.gz")
+steels = load_dataset("matbench_steels")
 
 
 # %%

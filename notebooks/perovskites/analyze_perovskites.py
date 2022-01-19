@@ -17,7 +17,7 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 # %%
 import matplotlib.pyplot as plt
 import pandas as pd
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 from ml_matrics import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from pymatgen.ext.matproj import MPRester
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -26,7 +26,7 @@ from tqdm import tqdm
 
 # %%
 tqdm.pandas()
-perovskites = load_dataframe_from_json("../../data/perovskites.json.gz")
+perovskites = load_dataset("matbench_perovskites")
 
 
 # %%

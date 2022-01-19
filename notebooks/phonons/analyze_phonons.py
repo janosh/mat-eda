@@ -20,6 +20,7 @@ https://ml.materialsproject.org/projects/matbench_phonons
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matminer.datasets import load_dataset
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
 from ml_matrics import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from pymatgen.ext.matproj import MPRester
@@ -32,7 +33,7 @@ tqdm.pandas()
 
 # %%
 tqdm.pandas()
-phonons = load_dataframe_from_json("../../data/phonons.json.gz")
+phonons = load_dataset("matbench_phonons")
 
 
 # %%
@@ -60,8 +61,8 @@ annotate_bar_heights()
 plt.savefig("likely_mp_ids_lens.png", dpi=200)
 
 
-# %% where there are several mp_ids, pick the one with lowest energy above the convex hull
-def get_e_above_hull(mp_id):
+# %% where there are several mp_ids, pick the one with lowest energy above convex hull
+def get_e_above_hull(mp_id: str) -> float:
     return mpr.query(mp_id, ["e_above_hull"])["e_above_hull"]
 
 
@@ -75,19 +76,10 @@ phonons["likely_mp_id"] = phonons.apply(
 
 
 # %%
-store_dataframe_as_json(
-    phonons[["structure", "last phdos peak", "likely_mp_id"]],
-    "matbench-phonons-with-mp-id.json.gz",
-    compression="gz",
-)
+cols = ["structure", "last phdos peak", "likely_mp_id"]
+store_dataframe_as_json(phonons[cols], "matbench-phonons-with-mp-id.json.gz")
 
-
-# %% sort of a dumb test but check for 5 % of entries that
-# formulas of first found and original structures match
-for _, (struct, _, id) in phonons.sample(frac=0.05).iterrows():
-    print(f"{id=}")
-    struct = mpr.get_structure_by_material_id(phonons["likely_mp_id"].iloc[0])
-    assert struct.formula == phonons.structure.iloc[0].formula
+phonons[cols] = load_dataframe_from_json("matbench-phonons-with-mp-id.json.gz")
 
 
 # %%

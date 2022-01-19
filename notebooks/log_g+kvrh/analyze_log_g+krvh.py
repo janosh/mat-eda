@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import nglview as nv
 import numpy as np
 import pandas as pd
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 from ml_matrics import ptable_heatmap, spacegroup_hist
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
@@ -25,8 +25,8 @@ from tqdm import tqdm
 
 
 # %%
-log_gvrh = load_dataframe_from_json("../../data/log_gvrh.json.gz")
-log_kvrh = load_dataframe_from_json("../../data/log_kvrh.json.gz")
+log_gvrh = load_dataset("matbench_log_gvrh")
+log_kvrh = load_dataset("matbench_log_kvrh")
 
 tqdm.pandas()
 
@@ -89,7 +89,7 @@ log_gvrh["graph_size"] = log_gvrh[f"neighbor_list_r{radius}"].apply(
 
 
 # %%
-for idx, (structure, target, *_) in log_gvrh[log_gvrh.graph_size == 0].iterrows():
+for idx, structure, target, *_ in log_gvrh.query("graph_size == 0").itertuples():
     print(f"\n{idx = }")
     print(f"{structure = }")
     print(f"{target = }")

@@ -21,14 +21,12 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html#ricci-boltztrap-m
 # %%
 import matplotlib.pyplot as plt
 import pandas as pd
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 from ml_matrics import ptable_heatmap, spacegroup_hist
 
 
 # %%
-carrier_transport = load_dataframe_from_json(
-    "../../data/ricci_boltztrap_carrier_transport.json.gz"
-)
+carrier_transport = load_dataset("ricci_boltztrap_mp_tabular")
 
 
 # %%

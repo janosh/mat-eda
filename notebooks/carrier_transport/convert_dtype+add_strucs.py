@@ -1,16 +1,16 @@
-"""Unprocessed data in data/carrier_transport.json.gz obtained from https://git.io/JOMwY."""
+"""
+Unprocessed data in data/carrier_transport.json.gz obtained from https://git.io/JOMwY.
+"""
 
 
 # %%
 import pandas as pd
-from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
+from matminer.datasets import load_dataset, store_dataframe_as_json
 from pymatgen.ext.matproj import MPRester
 
 
 # %%
-carrier_transport = load_dataframe_from_json(
-    "../../data/raw_ricci_carrier_transport.json.gz"
-)
+carrier_transport = load_dataset("ricci_boltztrap_mp_tabular")
 
 
 # %%
@@ -101,8 +101,4 @@ for col, vals in carrier_transport[col_map.values()].items():
 
 
 # %%
-store_dataframe_as_json(
-    carrier_transport,
-    "../../data/ricci_boltztrap_carrier_transport.json.gz",
-    compression="gz",
-)
+store_dataframe_as_json(carrier_transport, "cleaned_ricci_boltztrap_mp_tabular.json.gz")

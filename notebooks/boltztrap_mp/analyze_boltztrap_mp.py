@@ -29,12 +29,12 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
 
 # %%
 import matplotlib.pyplot as plt
-from matminer.utils.io import load_dataframe_from_json
+from matminer.datasets import load_dataset
 from ml_matrics import ptable_heatmap
 
 
 # %%
-(boltztrap_mp := load_dataframe_from_json("../../data/boltztrap_mp.json.gz"))
+(boltztrap_mp := load_dataset("boltztrap_mp"))
 
 
 # %%
