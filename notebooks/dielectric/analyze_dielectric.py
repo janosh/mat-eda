@@ -17,8 +17,8 @@ https://ml.materialsproject.org/projects/matbench_dielectric
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.datasets import load_dataset
-from ml_matrics import ptable_heatmap, spacegroup_hist
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 

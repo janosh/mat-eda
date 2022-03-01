@@ -18,9 +18,9 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.datasets import load_dataset
-from ml_matrics import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from pymatgen.ext.matproj import MPRester
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 

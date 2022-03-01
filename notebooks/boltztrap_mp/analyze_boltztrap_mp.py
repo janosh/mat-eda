@@ -30,7 +30,7 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html
 # %%
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
-from ml_matrics import ptable_heatmap
+from pymatviz import ptable_heatmap
 
 
 # %%

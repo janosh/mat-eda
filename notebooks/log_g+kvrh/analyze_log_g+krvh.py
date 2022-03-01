@@ -18,9 +18,9 @@ import nglview as nv
 import numpy as np
 import pandas as pd
 from matminer.datasets import load_dataset
-from ml_matrics import ptable_heatmap, spacegroup_hist
 from pymatgen.core import Structure
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 

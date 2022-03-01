@@ -22,9 +22,9 @@ import numpy as np
 import pandas as pd
 from matminer.datasets import load_dataset
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
-from ml_matrics import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from pymatgen.ext.matproj import MPRester
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
+from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 
