@@ -58,3 +58,14 @@ repos:
       - id: codespell
         stages: [commit, commit-msg]
         args: [--ignore-words-list, hist]
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+      - id: autoflake
+        args:
+          - --in-place
+          - --remove-unused-variables
+          - --remove-all-unused-imports
+          - --expand-star-imports
+          - --ignore-init-module-imports

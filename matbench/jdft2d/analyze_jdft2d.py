@@ -14,21 +14,17 @@ https://ml.materialsproject.org/projects/matbench_jdft2d
 
 # %%
 import matplotlib.pyplot as plt
-import pandas as pd
 from matminer.datasets import load_dataset
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatviz import ptable_heatmap, spacegroup_hist
-from tqdm import tqdm
+from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 
 
 # %%
-tqdm.pandas()
 (jdft2d := load_dataset("matbench_jdft2d"))
 
 
 # %%
 jdft2d.hist(column="exfoliation_en", bins=50, log=True)
-plt.savefig("jdft2d-last-dos-peak-hist.pdf")
+plt.savefig("jdft2d-exfoliation-energy-hist.pdf")
 
 
 # %%
@@ -37,26 +33,12 @@ jdft2d["formula"] = jdft2d.structure.apply(lambda cryst: cryst.formula)
 
 ptable_heatmap(jdft2d.formula, log=True)
 plt.title("Elemental prevalence in the Matbench Jarvis DFT 2D dataset")
-plt.savefig("jdft2d-elements-log.pdf")
+plt.savefig("jdft2d-ptable-heatmap-log.pdf")
 
 
 # %%
-jdft2d[["sg_symbol", "sg_number"]] = jdft2d.progress_apply(
+jdft2d[["sg_symbol", "sg_number"]] = jdft2d.apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-)
-
-jdft2d["crystal_system"] = jdft2d.structure.progress_apply(
-    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
-)
-
-jdft2d[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional-df-cols.csv", index=False
-)
-
-
-# %%
-jdft2d[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]] = pd.read_csv(
-    "additional-df-cols.csv"
 )
 
 
@@ -66,12 +48,7 @@ plt.savefig("jdft2d-spacegroup-hist.pdf")
 
 
 # %%
-jdft2d.value_counts("crystal_system").plot.pie(
-    autopct=lambda val: f"{val:.1f}% ({int(round(val * len(jdft2d) / 100)):,})"
-)
-plt.title("Crystal systems in Matbench jdft2d")
-
-plt.yticks(None)
-plt.xlabel(f"{len(jdft2d):,} total samples")
-plt.ylabel(None)
-plt.savefig("jd2dft-crystal-system-pie.pdf")
+fig = spacegroup_sunburst(jdft2d.sg_number, show_values="percent")
+fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
+fig.write_image("jdft2d-spacegroup-sunburst.pdf")
+fig.show()

@@ -26,4 +26,4 @@ plt.savefig("steels-yield-strength-hist.pdf")
 # %%
 ptable_heatmap(steels.composition, log=True)
 plt.title("Elemental prevalence in the Matbench steels dataset")
-plt.savefig("steels-elements-log.pdf")
+plt.savefig("steels-ptable-heatmap-log.pdf")

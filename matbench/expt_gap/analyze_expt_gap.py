@@ -40,4 +40,4 @@ plt.savefig("expt_gap_hist.pdf")
 # %%
 ptable_heatmap(expt_gap.composition, log=True)
 plt.title("Elemental prevalence in the Matbench experimental band gap dataset")
-plt.savefig("expt_gap-elements-log.pdf")
+plt.savefig("expt_gap-ptable-heatmap-log.pdf")
