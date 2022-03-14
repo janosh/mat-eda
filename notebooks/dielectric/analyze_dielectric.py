@@ -37,7 +37,7 @@ dielectric["volume"] = dielectric.structure.apply(lambda cryst: cryst.volume)
 dielectric["formula"] = dielectric.structure.apply(lambda cryst: cryst.formula)
 
 ptable_heatmap(dielectric.formula, log=True)
-plt.title("Elemental prevalence in the Matbench dieletric dataset")
+plt.title("Elemental prevalence in the Matbench dielectric dataset")
 plt.savefig("dielectric-elements-log.pdf")
 
 
