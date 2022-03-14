@@ -1,6 +1,15 @@
-# MatBench v0.1
+# mat-EDA
 
-## Overview
+Most of the datasets investigated in this repo are from the [`matbench`](https://matbench.materialsproject.org) collection. But there's also e.g.
+
+- [`ricci_carrier_transport`](https://hackingmaterials.lbl.gov/matminer/dataset_summary): Electronic Transport Properties by F. Ricci et al.](<https://contribs.materialsproject.org/projects/carrier_transport>) from MPContribs which contains 48,000 DFT Seebeck coefficients ([Paper](https://nature.com/articles/sdata201785)). [[Download link](https://contribs.materialsproject.org/projects/carrier_transport.json.gz) (from [here](https://git.io/JOMwY))].
+- [`boltztrap_mp`](https://hackingmaterials.lbl.gov/matminer/dataset_summary) which contains ~9000 effective mass and thermoelectric properties calculated by the BoltzTraP software package.
+- [`tri_camd_2022`](https://data.matr.io/7): Toyota Research Institute's 2nd active learning crystal discovery dataset from Computational Autonomy for
+Materials Discovery (CAMD)
+
+## [MatBench v0.1](https://matbench.materialsproject.org)
+
+### Overview
 
 > MatBench is an [ImageNet](http://www.image-net.org) for materials science; a set of 13 supervised, pre-cleaned, ready-to-use ML tasks for benchmarking and fair comparison. The tasks span across the domain of inorganic materials science applications.
 
@@ -10,7 +19,7 @@ Datasets were originally published in <https://nature.com/articles/s41524-020-00
 
 Detailed information about how each dataset was created and prepared for use is available at <https://hackingmaterials.lbl.gov/matminer/dataset_summary.html>
 
-## Full list of the 13 Matbench datasets in v0.1
+### Full list of the 13 Matbench datasets in v0.1
 
 | task name                | target column (unit)         | sample count | task type      | input       | links                             |
 | ------------------------ | ---------------------------- | ------------ | -------------- | ----------- | --------------------------------- |
@@ -55,7 +64,7 @@ Detailed information about how each dataset was created and prepared for use is 
 [25]: https://ml.materialsproject.org/projects/matbench_steels.json.gz
 [26]: https://ml.materialsproject.org/projects/matbench_steels
 
-## Leaderboard
+### Leaderboard
 
 | task name                | verified top score (MAE or ROCAUC) | algorithm name, config,             | general purpose algorithm? |
 | ------------------------ | ---------------------------------- | ----------------------------------- | -------------------------- |
@@ -73,11 +82,11 @@ Detailed information about how each dataset was created and prepared for use is 
 | `matbench_phonons`       | 36.9 cm^-1                         | MEGNet v0.2.2                       | yes, structure only        |
 | `matbench_steels`        | 95.2 MPa                           | Automatminer express v1.0.3.2019111 | yes                        |
 
-## Files of Interest
+### Files of Interest
 
 Everything in the [`notebooks`](/notebooks) directory.
 
-## How to load Matbench Datasets
+### How to load Matbench Datasets
 
 The simplest way to load Matbench datasets is with `matminer` (`pip install matminer`):
 
@@ -88,7 +97,3 @@ df = load_dataset("matbench_<dataset_name>")
 ```
 
 `load_dataset` fetches and caches the dataset locally and automatically hydrates Pymatgen objects like `Structure` and `Composition` in the returned dataframe.
-
-## Interesting Datasets in MPContribs
-
-- [**Electronic Transport Properties** by F. Ricci et al.](https://contribs.materialsproject.org/projects/carrier_transport) contains 48,000 DFT Seebeck coefficients ([Paper](https://nature.com/articles/sdata201785)). [[Download link](https://contribs.materialsproject.org/projects/carrier_transport.json.gz) (from [here](https://git.io/JOMwY))].
