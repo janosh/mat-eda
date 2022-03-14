@@ -24,7 +24,7 @@ from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 
 # %%
 jdft2d.hist(column="exfoliation_en", bins=50, log=True)
-plt.savefig("jdft2d-last-dos-peak-hist.pdf")
+plt.savefig("jdft2d-exfoliation-energy-hist.pdf")
 
 
 # %%
