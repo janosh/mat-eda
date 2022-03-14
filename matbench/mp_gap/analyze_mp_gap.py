@@ -37,7 +37,7 @@ mp_gap["formula"] = mp_gap.structure.apply(lambda cryst: cryst.formula)
 # %%
 ptable_heatmap(mp_gap.formula, log=True)
 plt.title("Elemental prevalence in the Matbench MP band gap dataset")
-plt.savefig("mp_gap-elements-log.pdf")
+plt.savefig("mp_gap-ptable-heatmap-log.pdf")
 
 
 # %%

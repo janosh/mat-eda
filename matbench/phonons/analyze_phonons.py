@@ -19,20 +19,13 @@ https://ml.materialsproject.org/projects/matbench_phonons
 # %%
 import matplotlib.pyplot as plt
 import numpy as np
-import pandas as pd
 from matminer.datasets import load_dataset
 from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
 from pymatgen.ext.matproj import MPRester
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
-from tqdm import tqdm
-
-
-tqdm.pandas()
 
 
 # %%
-tqdm.pandas()
 phonons = load_dataset("matbench_phonons")
 
 
@@ -47,12 +40,12 @@ phonons["volume"] = phonons.structure.apply(lambda cryst: cryst.volume)
 
 ptable_heatmap(phonons.formula, log=True)
 plt.title("Elemental prevalence in the Matbench phonons dataset")
-plt.savefig("phonons-elements-log.pdf")
+plt.savefig("phonons-ptable-heatmap-log.pdf")
 
 
 # %%
 mpr = MPRester()
-phonons["likely_mp_ids"] = phonons.structure.progress_apply(mpr.find_structure)
+phonons["likely_mp_ids"] = phonons.structure.apply(mpr.find_structure)
 
 
 # %%
@@ -66,7 +59,7 @@ def get_e_above_hull(mp_id: str) -> float:
     return mpr.query(mp_id, ["e_above_hull"])["e_above_hull"]
 
 
-phonons["es_above_hull"] = phonons.likely_mp_ids.progress_apply(
+phonons["es_above_hull"] = phonons.likely_mp_ids.apply(
     lambda ids: [get_e_above_hull(id) for id in ids]
 )
 
@@ -83,23 +76,9 @@ phonons[cols] = load_dataframe_from_json("matbench-phonons-with-mp-id.json.gz")
 
 
 # %%
-phonons[["sg_symbol", "sg_number"]] = phonons.progress_apply(
+phonons[["sg_symbol", "sg_number"]] = phonons.apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
-
-phonons["crystal_system"] = phonons.structure.progress_apply(
-    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
-)
-
-phonons[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional-df-cols.csv", index=False
-)
-
-
-# %%
-phonons[
-    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional-df-cols.csv")
 
 
 # %%

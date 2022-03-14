@@ -32,7 +32,7 @@ carrier_transport = load_dataset("ricci_boltztrap_mp_tabular")
 # %%
 ptable_heatmap(carrier_transport.pretty_formula.dropna(), log=True)
 plt.title("Elemental prevalence in the Ricci Carrier Transport dataset")
-plt.savefig("carrier-transport-elements-log.pdf")
+plt.savefig("carrier-transport-ptable-heatmap-log.pdf")
 
 
 # %%

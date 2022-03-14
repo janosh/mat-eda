@@ -67,3 +67,4 @@ df["sg_number"] = [x.int_number for x in spgs]
 fig = spacegroup_sunburst(df.sg_number, show_values="percent")
 fig.show()
 fig.write_image("camd-2022-spacegroup-sunburst.pdf")
+fig.show()

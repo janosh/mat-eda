@@ -16,19 +16,14 @@ from time import perf_counter
 import matplotlib.pyplot as plt
 import nglview as nv
 import numpy as np
-import pandas as pd
 from matminer.datasets import load_dataset
 from pymatgen.core import Structure
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatviz import ptable_heatmap, spacegroup_hist
-from tqdm import tqdm
+from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 
 
 # %%
 log_gvrh = load_dataset("matbench_log_gvrh")
 log_kvrh = load_dataset("matbench_log_kvrh")
-
-tqdm.pandas()
 
 
 # %%
@@ -114,29 +109,14 @@ log_gvrh["formula"] = log_gvrh.structure.apply(lambda struct: struct.formula)
 
 ptable_heatmap(log_gvrh.formula, log=True)
 plt.title("Elemental prevalence in the Matbench bulk/shear modulus datasets")
-plt.savefig("log_gvrh-elements-log.pdf")
+plt.savefig("log_gvrh-ptable-heatmap-log.pdf")
 
 
 # %% getting space group symbols and numbers for 10,987 structures takes about 4 min
 print("getting spacegroups for log_gvrh")
-log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.progress_apply(
+log_gvrh[["sg_symbol", "sg_number"]] = log_gvrh.apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
-
-print("getting crystal systems for log_gvrh")
-log_gvrh["crystal_system"] = log_gvrh.structure.progress_apply(
-    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
-)
-
-log_gvrh[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional-df-cols.csv", index=False
-)
-
-
-# %%
-log_gvrh[
-    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional-df-cols.csv")
 
 
 # %%
@@ -145,4 +125,9 @@ plt.savefig("log_gvrh-spacegroup-hist.pdf")
 
 
 # %%
-log_gvrh.crystal_system.value_counts().plot.pie(autopct="%1.1f%%")
+
+# %%
+fig = spacegroup_sunburst(log_gvrh.sg_number, show_values="percent")
+fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
+fig.write_image("log_gvrh-spacegroup-sunburst.pdf")
+fig.show()

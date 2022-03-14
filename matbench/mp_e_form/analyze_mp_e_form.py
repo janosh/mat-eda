@@ -34,4 +34,4 @@ mp_e_form["formula"] = mp_e_form.structure.apply(lambda struct: struct.formula)
 # %%
 ptable_heatmap(mp_e_form.formula, log=True)
 plt.title("Elemental prevalence in the Matbench formation energy dataset")
-plt.savefig("mp_e_form-elements-log.pdf")
+plt.savefig("mp_e_form-ptable-heatmap-log.pdf")

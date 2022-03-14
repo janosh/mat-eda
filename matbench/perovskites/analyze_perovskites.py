@@ -16,16 +16,18 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 
 # %%
 import matplotlib.pyplot as plt
-import pandas as pd
 from matminer.datasets import load_dataset
 from pymatgen.ext.matproj import MPRester
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
-from tqdm import tqdm
+from pymatviz import (
+    annotate_bar_heights,
+    ptable_heatmap,
+    spacegroup_hist,
+    spacegroup_sunburst,
+)
 
 
 # %%
-tqdm.pandas()
 perovskites = load_dataset("matbench_perovskites")
 
 
@@ -39,7 +41,7 @@ perovskites["formula"] = perovskites.structure.apply(lambda cryst: cryst.formula
 
 ptable_heatmap(perovskites.formula, log=True)
 plt.title("Elemental prevalence in the Matbench perovskites dataset")
-plt.savefig("perovskites-elements-log.pdf")
+plt.savefig("perovskites-ptable-heatmap-log.pdf")
 
 
 # %%
@@ -50,7 +52,7 @@ perovskites.hist(column="volume", bins=50, log=True)
 
 # %%
 mpr = MPRester()
-perovskites["likely_mp_ids"] = perovskites.structure.progress_apply(mpr.find_structure)
+perovskites["likely_mp_ids"] = perovskites.structure.apply(mpr.find_structure)
 
 
 # %%
@@ -66,23 +68,13 @@ plt.savefig("likely_mp_ids_lens.pdf")
 
 
 # %%
-perovskites[["sg_symbol", "sg_number"]] = perovskites.progress_apply(
+perovskites[["sg_symbol", "sg_number"]] = perovskites.apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
 
-perovskites["crystal_system"] = perovskites.structure.progress_apply(
+perovskites["crystal_system"] = perovskites.structure.apply(
     lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
 )
-
-perovskites[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional-df-cols.csv", index=False
-)
-
-
-# %%
-perovskites[
-    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional-df-cols.csv")
 
 
 # %%
@@ -106,10 +98,7 @@ perovskites.plot.scatter(x="volume", y="e_form", c="sg_number", colormap="viridi
 
 
 # %%
-perovskites.value_counts(["crystal_system", "sg_number"]).sort_index().plot.pie(
-    autopct="%1.1f%%"
-)
-
-plt.title("Crystal systems and space groups in Matbench Perovskites")
-plt.ylabel(None)
-plt.savefig("perovskites-crystal-system-pie.pdf")
+fig = spacegroup_sunburst(perovskites.sg_number, show_values="percent")
+fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
+fig.write_image("jdft2d-spacegroup-sunburst.pdf")
+fig.show()

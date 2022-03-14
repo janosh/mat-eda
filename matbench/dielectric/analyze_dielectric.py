@@ -1,13 +1,13 @@
-"""Stats for the matbench_dielectric dataset.
+"""matbench_dielectric dataset
 
 Input: Pymatgen Structure of the material.
-Target variable: Exfoliation energy (meV).
+Target variable: refractive index.
 Entries: 636
 
-Matbench v0.1 dataset for predicting exfoliation energies from crystal structure
-(computed with the OptB88vdW and TBmBJ functionals). Adapted from the JARVIS DFT
-database.
-
+Matbench v0. 1 test dataset for predicting refractive index from structure. Adapted from
+Materials Project database. Removed entries having a formation energy (or energy above
+the convex hull) more than 150meV and those having refractive indices less than 1 and
+those containing noble gases. Retrieved April 2, 2019.
 
 https://ml.materialsproject.org/projects/matbench_dielectric
 """
@@ -15,21 +15,12 @@ https://ml.materialsproject.org/projects/matbench_dielectric
 
 # %%
 import matplotlib.pyplot as plt
-import pandas as pd
 from matminer.datasets import load_dataset
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatviz import ptable_heatmap, spacegroup_hist
-from tqdm import tqdm
+from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 
 
 # %%
-tqdm.pandas()
-(dielectric := load_dataset("matbench_dielectric"))
-
-
-# %%
-dielectric.hist(column="n", bins=50, log=True)
-plt.savefig("dielectric-last-dos-peak-hist.pdf")
+dielectric = load_dataset("matbench_dielectric")
 
 
 # %%
@@ -38,41 +29,27 @@ dielectric["formula"] = dielectric.structure.apply(lambda cryst: cryst.formula)
 
 ptable_heatmap(dielectric.formula, log=True)
 plt.title("Elemental prevalence in the Matbench dielectric dataset")
-plt.savefig("dielectric-elements-log.pdf")
+plt.savefig("dielectric-ptable-heatmap-log.pdf")
 
 
 # %%
-dielectric[["sg_symbol", "sg_number"]] = dielectric.progress_apply(
+dielectric[["sg_symbol", "sg_number"]] = dielectric.apply(
     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
 )
 
-dielectric["crystal_system"] = dielectric.structure.progress_apply(
-    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
-)
-
-dielectric[["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]].to_csv(
-    "additional-df-cols.csv", index=False
-)
+# %%
+dielectric.hist(bins=80, log=True, figsize=(20, 4), layout=(1, 3))
+plt.savefig("dielectric-hists.pdf")
 
 
 # %%
-dielectric[
-    ["sg_symbol", "sg_number", "crystal_system", "volume", "formula"]
-] = pd.read_csv("additional-df-cols.csv")
-
-
-# %%
-spacegroup_hist(dielectric.sg_number)
+ax = spacegroup_hist(dielectric.sg_number)
+ax.set_title("Space group histogram", y=1.1)
 plt.savefig("dielectric-spacegroup-hist.pdf")
 
 
 # %%
-dielectric.value_counts("crystal_system").plot.pie(
-    autopct=lambda val: f"{val:.1f}% ({round(val * len(dielectric) / 100):,})"
-)
-plt.title("Crystal systems in Matbench dielectric")
-
-plt.yticks(None)
-plt.xlabel(f"{len(dielectric):,} total samples")
-plt.ylabel(None)
-plt.savefig("dielectric-crystal-system-pie.pdf")
+fig = spacegroup_sunburst(dielectric.sg_number, show_values="percent")
+fig.update_layout(title="Space group sunburst")
+fig.write_image("dielectric-spacegroup-sunburst.pdf")
+fig.show()

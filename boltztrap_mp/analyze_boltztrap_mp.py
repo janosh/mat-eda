@@ -40,13 +40,13 @@ from pymatviz import ptable_heatmap
 # %%
 ptable_heatmap(boltztrap_mp.formula, log=True)
 plt.title("Elemental prevalence in the BoltzTraP MP dataset")
-plt.savefig("boltztrap_mp-elements-log.pdf")
+plt.savefig("boltztrap_mp-ptable-heatmap-log.pdf")
 
 
 # %%
 ptable_heatmap(boltztrap_mp.sort_values("pf_n").tail(100).formula)
 plt.title("Elemental prevalence of top 100 n-type powerfactors in BoltzTraP MP dataset")
-plt.savefig("boltztrap_mp-elements-top-100-nPF.pdf")
+plt.savefig("boltztrap_mp-ptable-heatmap-top-100-nPF.pdf")
 
 
 # %%
