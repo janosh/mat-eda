@@ -23,21 +23,61 @@ https://ml.materialsproject.org/projects/matbench_expt_gap
 
 
 # %%
+from __future__ import annotations
+
 import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.io as pio
 from matminer.datasets import load_dataset
+from pymatgen.core import Composition
 from pymatviz import ptable_heatmap
 
 
-# %%
-expt_gap = load_dataset("matbench_expt_gap")
+pio.templates.default = "plotly_white"
 
 
 # %%
-expt_gap.hist(column="gap expt", bins=50, log=True)
-plt.savefig("expt_gap_hist.pdf")
+df_gap = load_dataset("matbench_expt_gap")
+
+df_gap["pmg_comp"] = df_gap.composition.apply(Composition)
+df_gap["n_atoms"] = [x.num_atoms for x in df_gap.pmg_comp]
+df_gap["n_elems"] = df_gap.pmg_comp.apply(len)
+
+
+def mean_atomic_prop(comp: Composition, prop: str) -> float | None:
+    try:
+        return sum(getattr(el, prop) * amt for el, amt in comp.items()) / comp.num_atoms
+    except Exception:
+        print(f"Could not compute mean {prop} for {comp}")
+        return None
+
+
+df_gap["mean_mass"] = df_gap.pmg_comp.apply(mean_atomic_prop, args=["atomic_mass"])
+df_gap["mean_radius"] = df_gap.pmg_comp.apply(mean_atomic_prop, args=["atomic_radius"])
 
 
 # %%
-ptable_heatmap(expt_gap.composition, log=True)
+ptable_heatmap(df_gap.composition, log=True)
 plt.title("Elemental prevalence in the Matbench experimental band gap dataset")
-plt.savefig("expt_gap-ptable-heatmap-log.pdf")
+plt.savefig("expt-gap-ptable-heatmap-log.pdf")
+
+
+# %%
+labels = {
+    "n_atoms": "# of atoms",
+    "n_elems": "# of elements",
+    "gap expt": "Experimental band gap (eV)",
+}
+fig = px.scatter(
+    df_gap,
+    x="n_atoms",
+    y="gap expt",
+    color="n_elems",
+    labels=labels,
+    size="mean_mass",
+    hover_name="composition",
+    log_x=True,
+)
+fig.update_layout(title="Marker size = mean atomic mass")
+fig.write_image("expt-gap-scatter.pdf")
+fig.show()

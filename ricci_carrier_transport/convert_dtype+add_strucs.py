@@ -10,22 +10,22 @@ from pymatgen.ext.matproj import MPRester
 
 
 # %%
-carrier_transport = load_dataset("ricci_boltztrap_mp_tabular")
+df_carrier = load_dataset("ricci_boltztrap_mp_tabular")
 
 
 # %%
-carrier_transport = pd.concat(
-    [carrier_transport, pd.json_normalize(carrier_transport.data)], axis=1
-).drop(columns=["data", "is_public", "project"])
+df_carrier = pd.concat([df_carrier, pd.json_normalize(df_carrier.data)], axis=1).drop(
+    columns=["data", "is_public", "project"]
+)
 
-carrier_transport.set_index("identifier", inplace=True)
-carrier_transport.index.name = "mp_id"
+df_carrier.set_index("identifier", inplace=True)
+df_carrier.index.name = "mp_id"
 
 
 # %%
 with MPRester() as mpr:
     strucs = mpr.query(
-        {"task_ids": {"$in": carrier_transport.index.to_list()}},
+        {"task_ids": {"$in": df_carrier.index.to_list()}},
         ["task_ids", "structure"],
     )
 
@@ -34,11 +34,9 @@ with MPRester() as mpr:
 # get a map from task ID to its structure
 struc_df = pd.DataFrame(strucs).explode("task_ids").set_index("task_ids")
 
-carrier_transport[struc_df.columns] = struc_df
+df_carrier[struc_df.columns] = struc_df
 
-carrier_transport["pretty_formula"] = [
-    struct.formula for struct in carrier_transport.structure
-]
+df_carrier["pretty_formula"] = [struct.formula for struct in df_carrier.structure]
 
 
 # %% move all units from rows to header
@@ -87,18 +85,16 @@ col_map = {
     "mₑᶜ.n.ε₂": "mₑᶜ.n.ε₂ [mₑ]",
     "mₑᶜ.n.ε₃": "mₑᶜ.n.ε₃ [mₑ]",
 }
-carrier_transport.rename(columns=col_map, inplace=True)
+df_carrier.rename(columns=col_map, inplace=True)
 
 
 # %% convert all target columns to dtype float
 units = ["Å³", "µV/K", "cm⁻³", "1/Ω/m/s", "K", "µW/cm/K²/s", "mₑ", "eV", "W/K/m/s"]
 
 
-for col, vals in carrier_transport[col_map.values()].items():
-    carrier_transport[col] = vals.str.replace("|".join(units), "", regex=True).astype(
-        float
-    )
+for col, vals in df_carrier[col_map.values()].items():
+    df_carrier[col] = vals.str.replace("|".join(units), "", regex=True).astype(float)
 
 
 # %%
-store_dataframe_as_json(carrier_transport, "cleaned_ricci_boltztrap_mp_tabular.json.gz")
+store_dataframe_as_json(df_carrier, "cleaned_ricci_boltztrap_mp_tabular.json.gz")

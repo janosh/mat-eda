@@ -18,72 +18,66 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
 from pymatgen.ext.matproj import MPRester
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 from pymatviz import (
     annotate_bar_heights,
     ptable_heatmap,
     spacegroup_hist,
     spacegroup_sunburst,
 )
+from tqdm import tqdm
 
 
 # %%
-perovskites = load_dataset("matbench_perovskites")
+df_perov = load_dataset("matbench_perovskites")
+
+df_perov[["sg_symbol", "sg_number"]] = [
+    struct.get_space_group_info() for struct in tqdm(df_perov.structure)
+]
 
 
 # %%
-perovskites.hist(column="e_form", bins=50)
+df_perov.hist(column="e_form", bins=50)
 plt.savefig("perovskites-e_form-hist.pdf")
 
 
 # %%
-perovskites["formula"] = perovskites.structure.apply(lambda cryst: cryst.formula)
+df_perov["formula"] = df_perov.structure.apply(lambda cryst: cryst.formula)
 
-ptable_heatmap(perovskites.formula, log=True)
+ptable_heatmap(df_perov.formula, log=True)
 plt.title("Elemental prevalence in the Matbench perovskites dataset")
 plt.savefig("perovskites-ptable-heatmap-log.pdf")
 
 
 # %%
-perovskites["volume"] = perovskites.structure.apply(lambda struct: struct.volume)
+df_perov["volume"] = df_perov.structure.apply(lambda struct: struct.volume)
 
-perovskites.hist(column="volume", bins=50, log=True)
+df_perov.hist(column="volume", bins=50, log=True)
 
 
 # %%
 mpr = MPRester()
-perovskites["likely_mp_ids"] = perovskites.structure.apply(mpr.find_structure)
+df_perov["likely_mp_ids"] = [mpr.find_structure(x) for x in tqdm(df_perov.structure)]
 
 
 # %%
-mp_ids = perovskites.likely_mp_ids.explode().value_counts().index.to_list()
+mp_ids = df_perov.likely_mp_ids.explode().value_counts().index.to_list()
 
 es_above_hull = mpr.query({"material_id": {"$in": mp_ids}}, ["e_above_hull"])
 
 
 # %%
-ax = perovskites.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
+ax = df_perov.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
 annotate_bar_heights()
 plt.savefig("likely_mp_ids_lens.pdf")
 
 
 # %%
-perovskites[["sg_symbol", "sg_number"]] = perovskites.apply(
-    lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-)
-
-perovskites["crystal_system"] = perovskites.structure.apply(
-    lambda struct: SpacegroupAnalyzer(struct).get_crystal_system()
-)
-
-
-# %%
-spacegroup_hist(perovskites.sg_number)
+spacegroup_hist(df_perov.sg_number)
 plt.savefig("perovskites-spacegroup-hist.pdf")
 
 
 # %%
-perovskites["crystal_system"].value_counts().plot.bar()
+df_perov["crystal_system"].value_counts().plot.bar()
 
 plt.title("Crystal systems in Matbench Perovskites")
 plt.xticks(rotation="horizontal")
@@ -94,11 +88,11 @@ plt.savefig("perovskites-crystal-system-counts.pdf")
 
 
 # %%
-perovskites.plot.scatter(x="volume", y="e_form", c="sg_number", colormap="viridis")
+df_perov.plot.scatter(x="volume", y="e_form", c="sg_number", colormap="viridis")
 
 
 # %%
-fig = spacegroup_sunburst(perovskites.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_perov.sg_number, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("jdft2d-spacegroup-sunburst.pdf")
 fig.show()

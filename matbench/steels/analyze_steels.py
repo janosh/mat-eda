@@ -15,15 +15,15 @@ from pymatviz import ptable_heatmap
 
 
 # %%
-steels = load_dataset("matbench_steels")
+df_steels = load_dataset("matbench_steels")
 
 
 # %%
-steels.hist(column="yield strength", bins=50)
+df_steels.hist(column="yield strength", bins=50)
 plt.savefig("steels-yield-strength-hist.pdf")
 
 
 # %%
-ptable_heatmap(steels.composition, log=True)
+ptable_heatmap(df_steels.composition, log=True)
 plt.title("Elemental prevalence in the Matbench steels dataset")
 plt.savefig("steels-ptable-heatmap-log.pdf")

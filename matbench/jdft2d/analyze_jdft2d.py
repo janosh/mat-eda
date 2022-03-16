@@ -16,39 +16,40 @@ https://ml.materialsproject.org/projects/matbench_jdft2d
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
+from tqdm import tqdm
 
 
 # %%
-(jdft2d := load_dataset("matbench_jdft2d"))
+df_2d = load_dataset("matbench_jdft2d")
+
+df_2d[["sg_symbol", "sg_number"]] = [
+    struct.get_space_group_info() for struct in tqdm(df_2d.structure)
+]
+
+df_2d.describe()
 
 
 # %%
-jdft2d.hist(column="exfoliation_en", bins=50, log=True)
+df_2d.hist(column="exfoliation_en", bins=50, log=True)
 plt.savefig("jdft2d-exfoliation-energy-hist.pdf")
 
 
 # %%
-jdft2d["volume"] = jdft2d.structure.apply(lambda cryst: cryst.volume)
-jdft2d["formula"] = jdft2d.structure.apply(lambda cryst: cryst.formula)
+df_2d["volume"] = df_2d.structure.apply(lambda cryst: cryst.volume)
+df_2d["formula"] = df_2d.structure.apply(lambda cryst: cryst.formula)
 
-ptable_heatmap(jdft2d.formula, log=True)
+ptable_heatmap(df_2d.formula, log=True)
 plt.title("Elemental prevalence in the Matbench Jarvis DFT 2D dataset")
 plt.savefig("jdft2d-ptable-heatmap-log.pdf")
 
 
 # %%
-jdft2d[["sg_symbol", "sg_number"]] = jdft2d.apply(
-    lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-)
-
-
-# %%
-spacegroup_hist(jdft2d.sg_number, log=True)
+spacegroup_hist(df_2d.sg_number, log=True)
 plt.savefig("jdft2d-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(jdft2d.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_2d.sg_number, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("jdft2d-spacegroup-sunburst.pdf")
 fig.show()

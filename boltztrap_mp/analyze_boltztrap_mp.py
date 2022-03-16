@@ -34,29 +34,30 @@ from pymatviz import ptable_heatmap
 
 
 # %%
-(boltztrap_mp := load_dataset("boltztrap_mp"))
+df_boltz = load_dataset("boltztrap_mp")
+df_boltz.describe()
 
 
 # %%
-ptable_heatmap(boltztrap_mp.formula, log=True)
+ptable_heatmap(df_boltz.formula, log=True)
 plt.title("Elemental prevalence in the BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-ptable-heatmap-log.pdf")
 
 
 # %%
-ptable_heatmap(boltztrap_mp.sort_values("pf_n").tail(100).formula)
+ptable_heatmap(df_boltz.sort_values("pf_n").tail(100).formula)
 plt.title("Elemental prevalence of top 100 n-type powerfactors in BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-ptable-heatmap-top-100-nPF.pdf")
 
 
 # %%
-boltztrap_mp.hist(bins=50, log=True, layout=[2, 3], figsize=[18, 8])
+df_boltz.hist(bins=50, log=True, layout=[2, 3], figsize=[18, 8])
 plt.suptitle("BoltzTraP MP")
 plt.savefig("boltztrap_mp-hists.pdf")
 
 
 # %%
-boltztrap_mp.sort_values("pf_n", ascending=False).head(1000).hist(
+df_boltz.sort_values("pf_n", ascending=False).head(1000).hist(
     bins=50, log=True, layout=[2, 3], figsize=[18, 8]
 )
 plt.suptitle("BoltzTraP MP")

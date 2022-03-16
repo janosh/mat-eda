@@ -20,38 +20,42 @@ https://ml.materialsproject.org/projects/matbench_phonons
 import matplotlib.pyplot as plt
 import numpy as np
 from matminer.datasets import load_dataset
-from matminer.utils.io import load_dataframe_from_json, store_dataframe_as_json
 from pymatgen.ext.matproj import MPRester
 from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
+from tqdm import tqdm
 
 
 # %%
-phonons = load_dataset("matbench_phonons")
+df_phonon = load_dataset("matbench_phonons")
+
+df_phonon[["sg_symbol", "sg_number"]] = [
+    struct.get_space_group_info() for struct in tqdm(df_phonon.structure)
+]
 
 
 # %%
-phonons.hist(column="last phdos peak", bins=50)
+df_phonon.hist(column="last phdos peak", bins=50)
 plt.savefig("phonons-last-dos-peak-hist.pdf")
 
 
 # %%
-phonons["formula"] = phonons.structure.apply(lambda cryst: cryst.formula)
-phonons["volume"] = phonons.structure.apply(lambda cryst: cryst.volume)
+df_phonon["formula"] = df_phonon.structure.apply(lambda cryst: cryst.formula)
+df_phonon["volume"] = df_phonon.structure.apply(lambda cryst: cryst.volume)
 
-ptable_heatmap(phonons.formula, log=True)
+ptable_heatmap(df_phonon.formula, log=True)
 plt.title("Elemental prevalence in the Matbench phonons dataset")
 plt.savefig("phonons-ptable-heatmap-log.pdf")
 
 
 # %%
 mpr = MPRester()
-phonons["likely_mp_ids"] = phonons.structure.apply(mpr.find_structure)
+df_phonon["likely_mp_ids"] = [mpr.find_structure(x) for x in tqdm(df_phonon.structure)]
 
 
 # %%
-ax = phonons.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
+ax = df_phonon.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
 annotate_bar_heights()
-plt.savefig("likely_mp_ids_lens.png", dpi=200)
+plt.savefig("likely_mp_ids_lens.pdf")
 
 
 # %% where there are several mp_ids, pick the one with lowest energy above convex hull
@@ -59,28 +63,15 @@ def get_e_above_hull(mp_id: str) -> float:
     return mpr.query(mp_id, ["e_above_hull"])["e_above_hull"]
 
 
-phonons["es_above_hull"] = phonons.likely_mp_ids.apply(
+df_phonon["es_above_hull"] = df_phonon.likely_mp_ids.apply(
     lambda ids: [get_e_above_hull(id) for id in ids]
 )
 
-phonons["likely_mp_id"] = phonons.apply(
+df_phonon["likely_mp_id"] = df_phonon.apply(
     lambda row: row.likely_mp_ids[np.argmin(row.es_above_hull)], axis=1
 )
 
 
 # %%
-cols = ["structure", "last phdos peak", "likely_mp_id"]
-store_dataframe_as_json(phonons[cols], "matbench-phonons-with-mp-id.json.gz")
-
-phonons[cols] = load_dataframe_from_json("matbench-phonons-with-mp-id.json.gz")
-
-
-# %%
-phonons[["sg_symbol", "sg_number"]] = phonons.apply(
-    lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-)
-
-
-# %%
-spacegroup_hist(phonons.sg_number)
+spacegroup_hist(df_phonon.sg_number)
 plt.savefig("phonons-spacegroup-hist.pdf")

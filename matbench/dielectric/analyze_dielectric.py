@@ -15,41 +15,77 @@ https://ml.materialsproject.org/projects/matbench_dielectric
 
 # %%
 import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.io as pio
 from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
+from tqdm import tqdm
+
+
+pio.templates.default = "plotly_white"
 
 
 # %%
-dielectric = load_dataset("matbench_dielectric")
+df_diel = load_dataset("matbench_dielectric")
+
+df_diel[["sg_symbol", "sg_number"]] = [
+    struct.get_space_group_info() for struct in tqdm(df_diel.structure)
+]
 
 
 # %%
-dielectric["volume"] = dielectric.structure.apply(lambda cryst: cryst.volume)
-dielectric["formula"] = dielectric.structure.apply(lambda cryst: cryst.formula)
+df_diel["volume"] = df_diel.structure.apply(lambda x: x.volume)
+df_diel["formula"] = df_diel.structure.apply(lambda x: x.formula)
 
-ptable_heatmap(dielectric.formula, log=True)
+ptable_heatmap(df_diel.formula, log=True)
 plt.title("Elemental prevalence in the Matbench dielectric dataset")
 plt.savefig("dielectric-ptable-heatmap-log.pdf")
 
 
 # %%
-dielectric[["sg_symbol", "sg_number"]] = dielectric.apply(
-    lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-)
-
-# %%
-dielectric.hist(bins=80, log=True, figsize=(20, 4), layout=(1, 3))
+df_diel.hist(bins=80, log=True, figsize=(20, 4), layout=(1, 3))
 plt.savefig("dielectric-hists.pdf")
 
 
 # %%
-ax = spacegroup_hist(dielectric.sg_number)
+ax = spacegroup_hist(df_diel.sg_number)
 ax.set_title("Space group histogram", y=1.1)
 plt.savefig("dielectric-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(dielectric.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_diel.sg_number, show_values="percent")
 fig.update_layout(title="Space group sunburst")
 fig.write_image("dielectric-spacegroup-sunburst.pdf")
+fig.show()
+
+
+# %%
+labels = {"crys_sys": "Crystal system", "n": "Refractive index n"}
+
+fig = px.violin(df_diel, color="crys_sys", x="crys_sys", y="n", labels=labels)
+fig.update_layout(
+    title="Refractive index distribution by crystal system",
+    margin=dict(b=10, l=10, r=10, t=50),
+    showlegend=False,
+)
+fig.write_image("dielectric-violin.pdf")
+fig.show()
+
+
+# %%
+fig = px.scatter(
+    df_diel,
+    x="volume",
+    y="n",
+    color="crys_sys",
+    labels=labels,
+    size="n",
+    hover_data=["sg_symbol", "sg_number"],
+    hover_name="formula",
+    log_x=True,
+    log_y=True,
+)
+
+fig.write_image("dielectric-scatter.pdf")
 fig.show()

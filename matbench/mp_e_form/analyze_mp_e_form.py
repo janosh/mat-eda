@@ -19,19 +19,19 @@ from pymatviz import ptable_heatmap
 
 
 # %%
-mp_e_form = load_dataset("matbench_mp_e_form")
+df_e_form = load_dataset("matbench_mp_e_form")
 
 
 # %%
-mp_e_form.hist(column="e_form", bins=50, log=True)
+df_e_form.hist(column="e_form", bins=50, log=True)
 plt.savefig("mp_e_form_hist.pdf")
 
 
 # %%
-mp_e_form["formula"] = mp_e_form.structure.apply(lambda struct: struct.formula)
+df_e_form["formula"] = df_e_form.structure.apply(lambda struct: struct.formula)
 
 
 # %%
-ptable_heatmap(mp_e_form.formula, log=True)
+ptable_heatmap(df_e_form.formula, log=True)
 plt.title("Elemental prevalence in the Matbench formation energy dataset")
 plt.savefig("mp_e_form-ptable-heatmap-log.pdf")

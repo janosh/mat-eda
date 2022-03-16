@@ -23,27 +23,33 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap, spacegroup_hist
+from tqdm import tqdm
 
 
 # %%
-carrier_transport = load_dataset("ricci_boltztrap_mp_tabular")
+df_carrier = load_dataset("ricci_boltztrap_mp_tabular")
+
+# getting space group symbols and numbers takes about 2 min
+df_carrier[["sg_symbol", "sg_number"]] = [
+    struct.get_space_group_info() for struct in tqdm(df_carrier.structure)
+]
 
 
 # %%
-ptable_heatmap(carrier_transport.pretty_formula.dropna(), log=True)
+ptable_heatmap(df_carrier.pretty_formula.dropna(), log=True)
 plt.title("Elemental prevalence in the Ricci Carrier Transport dataset")
 plt.savefig("carrier-transport-ptable-heatmap-log.pdf")
 
 
 # %%
-carrier_transport.hist(bins=50, log=True, figsize=[30, 16])
+df_carrier.hist(bins=50, log=True, figsize=[30, 16])
 plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset", y=1.05)
 plt.savefig("carrier-transport-hists.pdf")
 
 
 # %%
-carrier_transport[["S.p [µV/K]", "S.n [µV/K]"]].hist(bins=50, log=True, figsize=[18, 8])
+df_carrier[["S.p [µV/K]", "S.n [µV/K]"]].hist(bins=50, log=True, figsize=[18, 8])
 plt.suptitle(
     "Ricci Carrier Transport dataset histograms for n- and p-type Seebeck coefficients"
 )
@@ -70,27 +76,17 @@ dependent_vars = [
     "κₑᵉ.n.v [W/K/m/s]",
 ]
 
-carrier_transport[dependent_vars].hist(bins=50, log=True, figsize=[30, 16])
+df_carrier[dependent_vars].hist(bins=50, log=True, figsize=[30, 16])
 plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset dependent variables", y=1.05)
 plt.savefig("carrier-transport-hists-dependent-vars.pdf")
 
 
 # %%
-# getting space group symbols and numbers takes about 2 min
-# carrier_transport[["sg_symbol", "sg_number"]] = carrier_transport.apply(
-#     lambda row: row.structure.get_space_group_info(), axis=1, result_type="expand"
-# )
-
-
-# carrier_transport[["sg_symbol", "sg_number"]].to_csv("spacegroup-cols.csv")
+df_carrier[["sg_symbol", "sg_number"]] = pd.read_csv("spacegroup-cols.csv")
 
 
 # %%
-carrier_transport[["sg_symbol", "sg_number"]] = pd.read_csv("spacegroup-cols.csv")
-
-
-# %%
-spacegroup_hist(carrier_transport.sg_number)
+spacegroup_hist(df_carrier.sg_number)
 plt.title("Spacegroup distribution in the Ricci carrier transport dataset")
 plt.savefig("carrier-transport-spacegroup-hist.pdf")
