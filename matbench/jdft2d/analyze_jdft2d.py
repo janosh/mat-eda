@@ -22,7 +22,7 @@ from tqdm import tqdm
 # %%
 df_2d = load_dataset("matbench_jdft2d")
 
-df_2d[["sg_symbol", "sg_number"]] = [
+df_2d[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_2d.structure)
 ]
 
@@ -44,12 +44,12 @@ plt.savefig("jdft2d-ptable-heatmap-log.pdf")
 
 
 # %%
-spacegroup_hist(df_2d.sg_number, log=True)
+spacegroup_hist(df_2d.spg_num, log=True)
 plt.savefig("jdft2d-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(df_2d.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_2d.spg_num, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("jdft2d-spacegroup-sunburst.pdf")
 fig.show()

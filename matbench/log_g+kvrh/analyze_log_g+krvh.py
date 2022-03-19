@@ -28,7 +28,7 @@ df_kvrh = load_dataset("matbench_log_kvrh")
 
 # getting space group symbols and numbers for 10,987 structures takes about 4 min
 print("getting spacegroups for log_gvrh")
-df_grvh[["sg_symbol", "sg_number"]] = [
+df_grvh[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_grvh.structure)
 ]
 
@@ -120,12 +120,12 @@ plt.savefig("log_gvrh-ptable-heatmap-log.pdf")
 
 
 # %%
-spacegroup_hist(df_grvh.sg_number)
+spacegroup_hist(df_grvh.spg_num)
 plt.savefig("log_gvrh-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(df_grvh.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_grvh.spg_num, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("log_gvrh-spacegroup-sunburst.pdf")
 fig.show()

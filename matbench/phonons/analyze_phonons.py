@@ -28,7 +28,7 @@ from tqdm import tqdm
 # %%
 df_phonon = load_dataset("matbench_phonons")
 
-df_phonon[["sg_symbol", "sg_number"]] = [
+df_phonon[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_phonon.structure)
 ]
 
@@ -73,5 +73,5 @@ df_phonon["likely_mp_id"] = df_phonon.apply(
 
 
 # %%
-spacegroup_hist(df_phonon.sg_number)
+spacegroup_hist(df_phonon.spg_num)
 plt.savefig("phonons-spacegroup-hist.pdf")

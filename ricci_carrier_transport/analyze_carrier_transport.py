@@ -20,7 +20,6 @@ https://hackingmaterials.lbl.gov/matminer/dataset_summary.html#ricci-boltztrap-m
 
 # %%
 import matplotlib.pyplot as plt
-import pandas as pd
 from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
@@ -30,7 +29,7 @@ from tqdm import tqdm
 df_carrier = load_dataset("ricci_boltztrap_mp_tabular")
 
 # getting space group symbols and numbers takes about 2 min
-df_carrier[["sg_symbol", "sg_number"]] = [
+df_carrier[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_carrier.structure)
 ]
 
@@ -83,10 +82,6 @@ plt.savefig("carrier-transport-hists-dependent-vars.pdf")
 
 
 # %%
-df_carrier[["sg_symbol", "sg_number"]] = pd.read_csv("spacegroup-cols.csv")
-
-
-# %%
-spacegroup_hist(df_carrier.sg_number)
+spacegroup_hist(df_carrier.spg_num)
 plt.title("Spacegroup distribution in the Ricci carrier transport dataset")
 plt.savefig("carrier-transport-spacegroup-hist.pdf")

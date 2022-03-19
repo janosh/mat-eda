@@ -62,9 +62,9 @@ annotate_bar_heights(voffset=3e3)
 # %%
 spgs = df.space_group.apply(SpaceGroup)
 
-df["sg_number"] = [x.int_number for x in spgs]
+df["spg_num"] = [x.int_number for x in spgs]
 
-fig = spacegroup_sunburst(df.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df.spg_num, show_values="percent")
 fig.show()
 fig.write_image("camd-2022-spacegroup-sunburst.pdf")
 fig.show()

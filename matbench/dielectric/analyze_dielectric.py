@@ -28,7 +28,7 @@ pio.templates.default = "plotly_white"
 # %%
 df_diel = load_dataset("matbench_dielectric")
 
-df_diel[["sg_symbol", "sg_number"]] = [
+df_diel[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_diel.structure)
 ]
 
@@ -48,13 +48,13 @@ plt.savefig("dielectric-hists.pdf")
 
 
 # %%
-ax = spacegroup_hist(df_diel.sg_number)
+ax = spacegroup_hist(df_diel.spg_num)
 ax.set_title("Space group histogram", y=1.1)
 plt.savefig("dielectric-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(df_diel.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_diel.spg_num, show_values="percent")
 fig.update_layout(title="Space group sunburst")
 fig.write_image("dielectric-spacegroup-sunburst.pdf")
 fig.show()
@@ -81,7 +81,7 @@ fig = px.scatter(
     color="crys_sys",
     labels=labels,
     size="n",
-    hover_data=["sg_symbol", "sg_number"],
+    hover_data=["spg_symbol", "spg_num"],
     hover_name="formula",
     log_x=True,
     log_y=True,

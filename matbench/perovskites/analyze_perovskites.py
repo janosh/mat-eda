@@ -30,7 +30,7 @@ from tqdm import tqdm
 # %%
 df_perov = load_dataset("matbench_perovskites")
 
-df_perov[["sg_symbol", "sg_number"]] = [
+df_perov[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_perov.structure)
 ]
 
@@ -72,7 +72,7 @@ plt.savefig("likely_mp_ids_lens.pdf")
 
 
 # %%
-spacegroup_hist(df_perov.sg_number)
+spacegroup_hist(df_perov.spg_num)
 plt.savefig("perovskites-spacegroup-hist.pdf")
 
 
@@ -88,11 +88,11 @@ plt.savefig("perovskites-crystal-system-counts.pdf")
 
 
 # %%
-df_perov.plot.scatter(x="volume", y="e_form", c="sg_number", colormap="viridis")
+df_perov.plot.scatter(x="volume", y="e_form", c="spg_num", colormap="viridis")
 
 
 # %%
-fig = spacegroup_sunburst(df_perov.sg_number, show_values="percent")
+fig = spacegroup_sunburst(df_perov.spg_num, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("jdft2d-spacegroup-sunburst.pdf")
 fig.show()
