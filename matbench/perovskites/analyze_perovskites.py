@@ -17,13 +17,18 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 # %%
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
-from pymatgen.ext.matproj import MPRester
-from pymatviz import annotate_bars, ptable_heatmap, spacegroup_hist, spacegroup_sunburst
+from pymatgen.symmetry.groups import SpaceGroup
+from pymatviz import (
+    annotate_bars,
+    plot_structure_2d,
+    ptable_heatmap,
+    spacegroup_sunburst,
+)
 from tqdm import tqdm
 
 
 plt.rc("savefig", bbox="tight")
-plt.rc("axes", titlesize=18, titleweight="bold")
+plt.rc("axes", titlesize=16, titleweight="bold")
 
 
 # %%
@@ -32,6 +37,23 @@ df_perov = load_dataset("matbench_perovskites")
 df_perov[["spg_symbol", "spg_num"]] = [
     struct.get_space_group_info() for struct in tqdm(df_perov.structure)
 ]
+df_perov["volume"] = df_perov.structure.map(lambda struct: struct.volume)
+
+df_perov["formula"] = df_perov.structure.map(lambda cryst: cryst.formula)
+
+df_perov["crys_sys"] = df_perov.spg_symbol.map(
+    lambda spg: SpaceGroup(spg).crystal_system
+)
+
+
+# %%
+fig, axs = plt.subplots(3, 4, figsize=(12, 12), tight_layout=True)
+
+for struct, ax in zip(df_perov.structure.head(12), axs.flat):
+    ax = plot_structure_2d(struct, ax=ax)
+    ax.set_title(struct.composition.reduced_formula, fontsize=14)
+
+plt.savefig("perovskite-structures-2d.pdf")
 
 
 # %%
@@ -40,45 +62,13 @@ plt.savefig("perovskites-e_form-hist.pdf")
 
 
 # %%
-df_perov["formula"] = df_perov.structure.map(lambda cryst: cryst.formula)
-
-ptable_heatmap(df_perov.formula, log=True)
-plt.title(
-    "Elements in Matbench Perovskites dataset", fontdict=dict(size=18, weight="bold")
-)
+ax = ptable_heatmap(df_perov.formula, log=True)
+plt.title("Elements in Matbench Perovskites dataset")
 plt.savefig("perovskites-ptable-heatmap.pdf")
 
 
 # %%
-df_perov["volume"] = df_perov.structure.apply(lambda struct: struct.volume)
-
-df_perov.hist(column="volume", bins=50, log=True)
-
-
-# %%
-mpr = MPRester()
-df_perov["likely_mp_ids"] = [mpr.find_structure(x) for x in tqdm(df_perov.structure)]
-
-
-# %%
-mp_ids = df_perov.likely_mp_ids.explode().value_counts().index.to_list()
-
-es_above_hull = mpr.query({"material_id": {"$in": mp_ids}}, ["e_above_hull"])
-
-
-# %%
-ax = df_perov.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
-annotate_bars()
-plt.savefig("likely_mp_ids_lens.pdf")
-
-
-# %%
-spacegroup_hist(df_perov.spg_num)
-plt.savefig("perovskites-spacegroup-hist.pdf")
-
-
-# %%
-df_perov["crystal_system"].value_counts().plot.bar()
+df_perov["crys_sys"].value_counts().plot.bar()
 
 plt.title("Crystal systems in Matbench Perovskites")
 plt.xticks(rotation="horizontal")
