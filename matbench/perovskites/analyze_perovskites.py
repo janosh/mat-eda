@@ -18,12 +18,7 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
 from pymatgen.ext.matproj import MPRester
-from pymatviz import (
-    annotate_bar_heights,
-    ptable_heatmap,
-    spacegroup_hist,
-    spacegroup_sunburst,
-)
+from pymatviz import annotate_bars, ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 from tqdm import tqdm
 
 
@@ -41,11 +36,13 @@ plt.savefig("perovskites-e_form-hist.pdf")
 
 
 # %%
-df_perov["formula"] = df_perov.structure.apply(lambda cryst: cryst.formula)
+df_perov["formula"] = df_perov.structure.map(lambda cryst: cryst.formula)
 
 ptable_heatmap(df_perov.formula, log=True)
-plt.title("Elemental prevalence in the Matbench perovskites dataset")
-plt.savefig("perovskites-ptable-heatmap-log.pdf")
+plt.title(
+    "Elements in Matbench Perovskites dataset", fontdict=dict(size=18, weight="bold")
+)
+plt.savefig("perovskites-ptable-heatmap.pdf")
 
 
 # %%
@@ -67,7 +64,7 @@ es_above_hull = mpr.query({"material_id": {"$in": mp_ids}}, ["e_above_hull"])
 
 # %%
 ax = df_perov.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
-annotate_bar_heights()
+annotate_bars()
 plt.savefig("likely_mp_ids_lens.pdf")
 
 
@@ -82,7 +79,7 @@ df_perov["crystal_system"].value_counts().plot.bar()
 plt.title("Crystal systems in Matbench Perovskites")
 plt.xticks(rotation="horizontal")
 
-annotate_bar_heights(voffset=250)
+annotate_bars(voffset=250)
 
 plt.savefig("perovskites-crystal-system-counts.pdf")
 
@@ -94,5 +91,5 @@ df_perov.plot.scatter(x="volume", y="e_form", c="spg_num", colormap="viridis")
 # %%
 fig = spacegroup_sunburst(df_perov.spg_num, show_values="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
-fig.write_image("jdft2d-spacegroup-sunburst.pdf")
+fig.write_image("perovskite-spacegroup-sunburst.pdf")
 fig.show()

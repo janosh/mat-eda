@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matminer.datasets import load_dataset
 from pymatgen.ext.matproj import MPRester
-from pymatviz import annotate_bar_heights, ptable_heatmap, spacegroup_hist
+from pymatviz import annotate_bars, ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 
@@ -44,7 +44,7 @@ df_phonon["volume"] = df_phonon.structure.apply(lambda cryst: cryst.volume)
 
 ptable_heatmap(df_phonon.formula, log=True)
 plt.title("Elemental prevalence in the Matbench phonons dataset")
-plt.savefig("phonons-ptable-heatmap-log.pdf")
+plt.savefig("phonons-ptable-heatmap.pdf")
 
 
 # %%
@@ -54,7 +54,7 @@ df_phonon["likely_mp_ids"] = [mpr.find_structure(x) for x in tqdm(df_phonon.stru
 
 # %%
 ax = df_phonon.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
-annotate_bar_heights()
+annotate_bars()
 plt.savefig("likely_mp_ids_lens.pdf")
 
 

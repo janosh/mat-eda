@@ -116,7 +116,7 @@ df_grvh["formula"] = df_grvh.structure.apply(lambda struct: struct.formula)
 
 ptable_heatmap(df_grvh.formula, log=True)
 plt.title("Elemental prevalence in the Matbench bulk/shear modulus datasets")
-plt.savefig("log_gvrh-ptable-heatmap-log.pdf")
+plt.savefig("log_gvrh-ptable-heatmap.pdf")
 
 
 # %%

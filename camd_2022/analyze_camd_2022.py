@@ -21,12 +21,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import requests
 from pymatgen.symmetry.groups import SpaceGroup
-from pymatviz import (
-    annotate_bar_heights,
-    count_elements,
-    ptable_heatmap,
-    spacegroup_sunburst,
-)
+from pymatviz import annotate_bars, count_elements, ptable_heatmap, spacegroup_sunburst
 
 
 # %% Download data (if needed)
@@ -50,13 +45,13 @@ df.hist(bins=50)
 # %%
 elem_counts = count_elements(df.reduced_formula)
 ptable_heatmap(elem_counts, log=True)
-plt.title("Elemental prevalence of CAMD 2022 dataset", fontsize=16)
-plt.savefig("camd-2022-ptable-heatmap-log.pdf")
+plt.title("Elements in CAMD 2022 dataset", fontdict=dict(size=18, weight="bold"))
+plt.savefig("camd-2022-ptable-heatmap.pdf")
 
 
 # %%
 df.data_source.value_counts().plot.bar(fontsize=18, rot=0)
-annotate_bar_heights(voffset=3e3)
+annotate_bars(voffset=3e3)
 
 
 # %%

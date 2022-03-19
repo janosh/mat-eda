@@ -37,7 +37,7 @@ df_carrier[["spg_symbol", "spg_num"]] = [
 # %%
 ptable_heatmap(df_carrier.pretty_formula.dropna(), log=True)
 plt.title("Elemental prevalence in the Ricci Carrier Transport dataset")
-plt.savefig("carrier-transport-ptable-heatmap-log.pdf")
+plt.savefig("carrier-transport-ptable-heatmap.pdf")
 
 
 # %%

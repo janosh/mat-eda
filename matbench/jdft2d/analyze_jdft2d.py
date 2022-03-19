@@ -40,7 +40,7 @@ df_2d["formula"] = df_2d.structure.apply(lambda cryst: cryst.formula)
 
 ptable_heatmap(df_2d.formula, log=True)
 plt.title("Elemental prevalence in the Matbench Jarvis DFT 2D dataset")
-plt.savefig("jdft2d-ptable-heatmap-log.pdf")
+plt.savefig("jdft2d-ptable-heatmap.pdf")
 
 
 # %%

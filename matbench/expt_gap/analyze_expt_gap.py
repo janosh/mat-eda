@@ -39,9 +39,9 @@ pio.templates.default = "plotly_white"
 # %%
 df_gap = load_dataset("matbench_expt_gap")
 
-df_gap["pmg_comp"] = df_gap.composition.apply(Composition)
+df_gap["pmg_comp"] = df_gap.composition.map(Composition)
 df_gap["n_atoms"] = [x.num_atoms for x in df_gap.pmg_comp]
-df_gap["n_elems"] = df_gap.pmg_comp.apply(len)
+df_gap["n_elems"] = df_gap.pmg_comp.map(len)
 
 
 def mean_atomic_prop(comp: Composition, prop: str) -> float | None:
@@ -57,9 +57,17 @@ df_gap["mean_radius"] = df_gap.pmg_comp.apply(mean_atomic_prop, args=["atomic_ra
 
 
 # %%
-ptable_heatmap(df_gap.composition, log=True)
-plt.title("Elemental prevalence in the Matbench experimental band gap dataset")
-plt.savefig("expt-gap-ptable-heatmap-log.pdf")
+ptable_heatmap(
+    df_gap.query("~composition.str.contains('Xe')").composition,
+    log=True,
+    text_color="black",
+)
+plt.title(
+    "Elements in Matbench experimental band gap dataset",
+    fontdict=dict(size=20, weight="bold"),
+)
+plt.tight_layout()
+plt.savefig("expt-gap-ptable-heatmap.pdf")
 
 
 # %%

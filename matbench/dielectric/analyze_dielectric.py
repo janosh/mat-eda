@@ -39,7 +39,7 @@ df_diel["formula"] = df_diel.structure.apply(lambda x: x.formula)
 
 ptable_heatmap(df_diel.formula, log=True)
 plt.title("Elemental prevalence in the Matbench dielectric dataset")
-plt.savefig("dielectric-ptable-heatmap-log.pdf")
+plt.savefig("dielectric-ptable-heatmap.pdf")
 
 
 # %%

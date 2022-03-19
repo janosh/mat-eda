@@ -40,13 +40,16 @@ df_boltz.describe()
 
 # %%
 ptable_heatmap(df_boltz.formula, log=True)
-plt.title("Elemental prevalence in the BoltzTraP MP dataset")
-plt.savefig("boltztrap_mp-ptable-heatmap-log.pdf")
+plt.title("Elements in BoltzTraP MP dataset", fontdict=dict(size=18, weight="bold"))
+plt.savefig("boltztrap_mp-ptable-heatmap.pdf")
 
 
 # %%
 ptable_heatmap(df_boltz.sort_values("pf_n").tail(100).formula)
-plt.title("Elemental prevalence of top 100 n-type powerfactors in BoltzTraP MP dataset")
+plt.title(
+    "Elements of top 100 n-type powerfactors in BoltzTraP MP dataset",
+    fontdict=dict(size=18, weight="bold"),
+)
 plt.savefig("boltztrap_mp-ptable-heatmap-top-100-nPF.pdf")
 
 
