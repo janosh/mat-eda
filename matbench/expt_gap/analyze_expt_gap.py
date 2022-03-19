@@ -35,6 +35,9 @@ from pymatviz import ptable_heatmap
 
 pio.templates.default = "plotly_white"
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
 
 # %%
 df_gap = load_dataset("matbench_expt_gap")
@@ -52,8 +55,8 @@ def mean_atomic_prop(comp: Composition, prop: str) -> float | None:
         return None
 
 
-df_gap["mean_mass"] = df_gap.pmg_comp.apply(mean_atomic_prop, args=["atomic_mass"])
-df_gap["mean_radius"] = df_gap.pmg_comp.apply(mean_atomic_prop, args=["atomic_radius"])
+df_gap["mean_mass"] = [mean_atomic_prop(x, "atomic_mass") for x in df_gap.pmg_comp]
+df_gap["mean_radius"] = [mean_atomic_prop(x, "atomic_radius") for x in df_gap.pmg_comp]
 
 
 # %%
@@ -62,10 +65,7 @@ ptable_heatmap(
     log=True,
     text_color="black",
 )
-plt.title(
-    "Elements in Matbench experimental band gap dataset",
-    fontdict=dict(size=20, weight="bold"),
-)
+plt.title("Elements in Matbench experimental band gap dataset")
 plt.tight_layout()
 plt.savefig("expt-gap-ptable-heatmap.pdf")
 

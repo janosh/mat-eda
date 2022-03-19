@@ -18,6 +18,10 @@ from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
+
 # %%
 df_e_form = load_dataset("matbench_mp_e_form")
 

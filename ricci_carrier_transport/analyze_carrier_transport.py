@@ -25,6 +25,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
+
 # %%
 df_carrier = load_dataset("ricci_boltztrap_mp_tabular")
 

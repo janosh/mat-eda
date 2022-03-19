@@ -24,6 +24,9 @@ from tqdm import tqdm
 
 pio.templates.default = "plotly_white"
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
 
 # %%
 df_diel = load_dataset("matbench_dielectric")
@@ -34,8 +37,8 @@ df_diel[["spg_symbol", "spg_num"]] = [
 
 
 # %%
-df_diel["volume"] = df_diel.structure.apply(lambda x: x.volume)
-df_diel["formula"] = df_diel.structure.apply(lambda x: x.formula)
+df_diel["volume"] = [x.volume for x in df_diel.structure]
+df_diel["formula"] = [x.formula for x in df_diel.structure]
 
 ptable_heatmap(df_diel.formula, log=True)
 plt.title("Elemental prevalence in the Matbench dielectric dataset")

@@ -22,6 +22,10 @@ from pymatviz import annotate_bars, ptable_heatmap, spacegroup_hist, spacegroup_
 from tqdm import tqdm
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=18, titleweight="bold")
+
+
 # %%
 df_perov = load_dataset("matbench_perovskites")
 
@@ -79,7 +83,7 @@ df_perov["crystal_system"].value_counts().plot.bar()
 plt.title("Crystal systems in Matbench Perovskites")
 plt.xticks(rotation="horizontal")
 
-annotate_bars(voffset=250)
+annotate_bars(v_offset=250)
 
 plt.savefig("perovskites-crystal-system-counts.pdf")
 
@@ -90,6 +94,6 @@ df_perov.plot.scatter(x="volume", y="e_form", c="spg_num", colormap="viridis")
 
 # %%
 fig = spacegroup_sunburst(df_perov.spg_num, show_values="percent")
-fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
+fig.update_layout(title="Matbench Perovskites spacegroup sunburst")
 fig.write_image("perovskite-spacegroup-sunburst.pdf")
 fig.show()

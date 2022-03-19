@@ -18,11 +18,13 @@ https://ml.materialsproject.org/projects/matbench_phonons
 
 # %%
 import matplotlib.pyplot as plt
-import numpy as np
 from matminer.datasets import load_dataset
-from pymatgen.ext.matproj import MPRester
-from pymatviz import annotate_bars, ptable_heatmap, spacegroup_hist
+from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
+
+
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
 
 
 # %%
@@ -45,31 +47,6 @@ df_phonon["volume"] = df_phonon.structure.apply(lambda cryst: cryst.volume)
 ptable_heatmap(df_phonon.formula, log=True)
 plt.title("Elemental prevalence in the Matbench phonons dataset")
 plt.savefig("phonons-ptable-heatmap.pdf")
-
-
-# %%
-mpr = MPRester()
-df_phonon["likely_mp_ids"] = [mpr.find_structure(x) for x in tqdm(df_phonon.structure)]
-
-
-# %%
-ax = df_phonon.likely_mp_ids.apply(len).value_counts().plot(kind="bar", log=True)
-annotate_bars()
-plt.savefig("likely_mp_ids_lens.pdf")
-
-
-# %% where there are several mp_ids, pick the one with lowest energy above convex hull
-def get_e_above_hull(mp_id: str) -> float:
-    return mpr.query(mp_id, ["e_above_hull"])["e_above_hull"]
-
-
-df_phonon["es_above_hull"] = df_phonon.likely_mp_ids.apply(
-    lambda ids: [get_e_above_hull(id) for id in ids]
-)
-
-df_phonon["likely_mp_id"] = df_phonon.apply(
-    lambda row: row.likely_mp_ids[np.argmin(row.es_above_hull)], axis=1
-)
 
 
 # %%

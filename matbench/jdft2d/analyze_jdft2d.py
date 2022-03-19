@@ -19,6 +19,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 from tqdm import tqdm
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
+
 # %%
 df_2d = load_dataset("matbench_jdft2d")
 
@@ -35,8 +39,8 @@ plt.savefig("jdft2d-exfoliation-energy-hist.pdf")
 
 
 # %%
-df_2d["volume"] = df_2d.structure.apply(lambda cryst: cryst.volume)
-df_2d["formula"] = df_2d.structure.apply(lambda cryst: cryst.formula)
+df_2d["volume"] = [x.volume for x in df_2d.structure]
+df_2d["formula"] = [x.formula for x in df_2d.structure]
 
 ptable_heatmap(df_2d.formula, log=True)
 plt.title("Elemental prevalence in the Matbench Jarvis DFT 2D dataset")

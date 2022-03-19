@@ -33,6 +33,10 @@ from matminer.datasets import load_dataset
 from pymatviz import ptable_heatmap
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
+
 # %%
 df_boltz = load_dataset("boltztrap_mp")
 df_boltz.describe()
@@ -40,16 +44,13 @@ df_boltz.describe()
 
 # %%
 ptable_heatmap(df_boltz.formula, log=True)
-plt.title("Elements in BoltzTraP MP dataset", fontdict=dict(size=18, weight="bold"))
+plt.title("Elements in BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-ptable-heatmap.pdf")
 
 
 # %%
 ptable_heatmap(df_boltz.sort_values("pf_n").tail(100).formula)
-plt.title(
-    "Elements of top 100 n-type powerfactors in BoltzTraP MP dataset",
-    fontdict=dict(size=18, weight="bold"),
-)
+plt.title("Elements of top 100 n-type powerfactors in BoltzTraP MP dataset")
 plt.savefig("boltztrap_mp-ptable-heatmap-top-100-nPF.pdf")
 
 

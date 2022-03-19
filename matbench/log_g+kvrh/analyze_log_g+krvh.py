@@ -22,6 +22,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 from tqdm import tqdm
 
 
+plt.rc("savefig", bbox="tight")
+plt.rc("axes", titlesize=16, titleweight="bold")
+
+
 # %%
 df_grvh = load_dataset("matbench_log_gvrh")
 df_kvrh = load_dataset("matbench_log_kvrh")
@@ -51,7 +55,8 @@ plt.savefig("log_g+kvrh-target-hist.pdf")
 
 
 # %%
-df_grvh["volume"] = df_grvh.structure.apply(lambda struct: struct.volume)
+df_grvh["volume"] = [x.volume for x in df_grvh.structure]
+df_grvh["formula"] = [x.formula for x in df_grvh.structure]
 
 df_grvh.hist(column="volume", bins=50, log=True, alpha=0.8)
 plt.savefig("log_gvrh-volume-hist.pdf")
@@ -60,14 +65,14 @@ plt.savefig("log_gvrh-volume-hist.pdf")
 # %%
 start = perf_counter()
 radius = 5
-df_grvh[f"neighbor_list_r{radius}"] = df_grvh.structure.apply(
-    lambda crystal: crystal.get_neighbor_list(r=radius),
-)
+df_grvh[f"neighbor_list_r{radius}"] = [
+    x.get_neighbor_list(r=radius) for x in df_grvh.structure
+]
 print(f"took {perf_counter() - start:.3f} sec")
 
-df_kvrh[f"neighbor_list_r{radius}"] = df_kvrh.structure.apply(
-    lambda crystal: crystal.get_neighbor_list(r=radius),
-)
+df_kvrh[f"neighbor_list_r{radius}"] = [
+    x.get_neighbor_list(r=radius) for x in df_kvrh.structure
+]
 
 
 # %%
