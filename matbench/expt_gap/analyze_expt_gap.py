@@ -35,8 +35,10 @@ from pymatviz import ptable_heatmap
 
 pio.templates.default = "plotly_white"
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %%
@@ -66,7 +68,6 @@ ptable_heatmap(
     text_color="black",
 )
 plt.title("Elements in Matbench experimental band gap dataset")
-plt.tight_layout()
 plt.savefig("expt-gap-ptable-heatmap.pdf")
 
 

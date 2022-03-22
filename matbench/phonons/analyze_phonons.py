@@ -23,8 +23,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %%

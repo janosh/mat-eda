@@ -25,8 +25,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist
 from tqdm import tqdm
 
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %%
@@ -46,7 +48,6 @@ plt.savefig("carrier-transport-ptable-heatmap.pdf")
 
 # %%
 df_carrier.hist(bins=50, log=True, figsize=[30, 16])
-plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset", y=1.05)
 plt.savefig("carrier-transport-hists.pdf")
 
@@ -80,7 +81,6 @@ dependent_vars = [
 ]
 
 df_carrier[dependent_vars].hist(bins=50, log=True, figsize=[30, 16])
-plt.tight_layout()
 plt.suptitle("Ricci Carrier Transport Dataset dependent variables", y=1.05)
 plt.savefig("carrier-transport-hists-dependent-vars.pdf")
 

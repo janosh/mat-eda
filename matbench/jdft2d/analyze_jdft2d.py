@@ -19,8 +19,10 @@ from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
 from tqdm import tqdm
 
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %%
@@ -53,7 +55,7 @@ plt.savefig("jdft2d-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(df_2d.spg_num, show_values="percent")
+fig = spacegroup_sunburst(df_2d.spg_num, show_counts="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("jdft2d-spacegroup-sunburst.pdf")
 fig.show()

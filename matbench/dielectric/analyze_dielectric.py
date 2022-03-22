@@ -24,8 +24,10 @@ from tqdm import tqdm
 
 pio.templates.default = "plotly_white"
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %%
@@ -57,7 +59,7 @@ plt.savefig("dielectric-spacegroup-hist.pdf")
 
 
 # %%
-fig = spacegroup_sunburst(df_diel.spg_num, show_values="percent")
+fig = spacegroup_sunburst(df_diel.spg_num, show_counts="percent")
 fig.update_layout(title="Space group sunburst")
 fig.write_image("dielectric-spacegroup-sunburst.pdf")
 fig.show()

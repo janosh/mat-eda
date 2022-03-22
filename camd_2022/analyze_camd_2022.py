@@ -24,8 +24,10 @@ from pymatgen.symmetry.groups import SpaceGroup
 from pymatviz import annotate_bars, count_elements, ptable_heatmap, spacegroup_sunburst
 
 
-plt.rc("savefig", bbox="tight")
+plt.rc("font", size=14)
+plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rcParams["figure.constrained_layout.use"] = True
 
 
 # %% Download data (if needed)
@@ -61,7 +63,7 @@ annotate_bars(v_offset=3e3)
 # %%
 df["spg_num"] = [SpaceGroup(x).int_number for x in df.space_group]
 
-fig = spacegroup_sunburst(df.spg_num, show_values="percent")
+fig = spacegroup_sunburst(df.spg_num, show_counts="percent")
 fig.show()
 fig.write_image("camd-2022-spacegroup-sunburst.pdf")
 fig.show()
