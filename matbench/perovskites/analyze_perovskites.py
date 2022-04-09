@@ -17,13 +17,13 @@ https://ml.materialsproject.org/projects/matbench_perovskites
 # %%
 import matplotlib.pyplot as plt
 from matminer.datasets import load_dataset
-from pymatgen.symmetry.groups import SpaceGroup
 from pymatviz import (
     annotate_bars,
     plot_structure_2d,
     ptable_heatmap,
     spacegroup_sunburst,
 )
+from pymatviz.utils import get_crystal_sys
 from tqdm import tqdm
 
 
@@ -43,9 +43,7 @@ df_perov["volume"] = df_perov.structure.map(lambda struct: struct.volume)
 
 df_perov["formula"] = df_perov.structure.map(lambda cryst: cryst.formula)
 
-df_perov["crys_sys"] = df_perov.spg_symbol.map(
-    lambda spg: SpaceGroup(spg).crystal_system
-)
+df_perov["crys_sys"] = [get_crystal_sys(x) for x in df_perov.spg_num]
 
 
 # %%

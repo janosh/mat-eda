@@ -3,6 +3,8 @@ ci:
 
 default_stages: [commit]
 
+default_install_hook_types: [pre-commit, commit-msg]
+
 repos:
   - repo: https://github.com/PyCQA/isort
     rev: 5.10.1
