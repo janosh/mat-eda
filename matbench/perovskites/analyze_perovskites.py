@@ -43,7 +43,7 @@ df_perov["volume"] = df_perov.structure.map(lambda struct: struct.volume)
 
 df_perov["formula"] = df_perov.structure.map(lambda cryst: cryst.formula)
 
-df_perov["crys_sys"] = [get_crystal_sys(x) for x in df_perov.spg_num]
+df_perov["crystal_sys"] = [get_crystal_sys(x) for x in df_perov.spg_num]
 
 
 # %%
@@ -68,7 +68,7 @@ plt.savefig("perovskites-ptable-heatmap.pdf")
 
 
 # %%
-df_perov["crys_sys"].value_counts().plot.bar()
+df_perov["crystal_sys"].value_counts().plot.bar()
 
 plt.title("Crystal systems in Matbench Perovskites")
 plt.xticks(rotation="horizontal")
