@@ -23,8 +23,6 @@ https://ml.materialsproject.org/projects/matbench_expt_gap
 
 
 # %%
-from __future__ import annotations
-
 import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.io as pio
@@ -73,8 +71,8 @@ plt.savefig("expt-gap-ptable-heatmap.pdf")
 
 # %%
 labels = {
-    "n_atoms": "# of atoms",
-    "n_elems": "# of elements",
+    "n_atoms": "Atom Count",
+    "n_elems": "Element Count",
     "gap expt": "Experimental band gap (eV)",
 }
 fig = px.scatter(

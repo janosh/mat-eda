@@ -14,11 +14,12 @@ https://ml.materialsproject.org/projects/matbench_log_kvrh
 from time import perf_counter
 
 import matplotlib.pyplot as plt
-import nglview as nv
 import numpy as np
+from aviary.wren.utils import count_wyks, get_aflow_label_spglib
 from matminer.datasets import load_dataset
 from pymatgen.core import Structure
 from pymatviz import ptable_heatmap, spacegroup_hist, spacegroup_sunburst
+from pymatviz.utils import get_crystal_sys
 from tqdm import tqdm
 
 
@@ -32,11 +33,19 @@ plt.rcParams["figure.constrained_layout.use"] = True
 df_grvh = load_dataset("matbench_log_gvrh")
 df_kvrh = load_dataset("matbench_log_kvrh")
 
-# getting space group symbols and numbers for 10,987 structures takes about 4 min
-print("getting spacegroups for log_gvrh")
+# getting space group symbols and numbers for 10,987 structures takes about 45 sec
 df_grvh[["spg_symbol", "spg_num"]] = [
-    struct.get_space_group_info() for struct in tqdm(df_grvh.structure)
+    struct.get_space_group_info()
+    for struct in tqdm(df_grvh.structure, desc="Getting matbench_log_gvrh spacegroups")
 ]
+df_grvh["crystal_sys"] = [get_crystal_sys(x) for x in df_grvh.spg_num]
+
+df_grvh["wyckoff"] = [
+    get_aflow_label_spglib(struct)
+    for struct in tqdm(df_grvh.structure, desc="Getting Wyckoff strings for log_gvrh")
+]
+df_grvh["n_wyckoff"] = df_grvh.wyckoff.map(count_wyks)
+df_grvh["formula"] = [x.formula for x in df_grvh.structure]
 
 
 # %%
@@ -102,14 +111,6 @@ for idx, structure, target, *_ in df_grvh.query("graph_size == 0").itertuples():
     print(f"\n{idx = }")
     print(f"{structure = }")
     print(f"{target = }")
-
-
-# %%
-structure.make_supercell([2, 2, 2])
-view = nv.show_pymatgen(structure)
-view.add_unitcell()
-structure.get_primitive_structure()
-view
 
 
 # %%

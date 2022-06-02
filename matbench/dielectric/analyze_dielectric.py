@@ -180,6 +180,9 @@ fig.update_layout(
     title=dict(text=f"<b>{title}</b>", x=0.5, font_size=20),
     legend=dict(x=1, y=1, xanchor="right"),
 )
+# slightly increase scatter point size (lower sizeref means larger)
+fig.update_traces(marker_sizeref=0.08, selector=dict(mode="markers"))
+
 
 # fig.write_image("dielectric-scatter.pdf")
 fig.show()
