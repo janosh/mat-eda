@@ -33,9 +33,9 @@ from pymatviz import ptable_heatmap
 
 pio.templates.default = "plotly_white"
 
-plt.rc("font", size=14)
+plt.rc("font", size=16)
 plt.rc("savefig", bbox="tight", dpi=200)
-plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rc("figure", dpi=150, titlesize=18)
 plt.rcParams["figure.constrained_layout.use"] = True
 
 

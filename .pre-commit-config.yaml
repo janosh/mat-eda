@@ -59,7 +59,6 @@ repos:
     hooks:
       - id: codespell
         stages: [commit, commit-msg]
-        args: [--ignore-words-list, hist]
 
   - repo: https://github.com/myint/autoflake
     rev: v1.4

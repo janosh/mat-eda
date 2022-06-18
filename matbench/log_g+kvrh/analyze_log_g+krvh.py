@@ -23,9 +23,9 @@ from pymatviz.utils import get_crystal_sys
 from tqdm import tqdm
 
 
-plt.rc("font", size=14)
+plt.rc("font", size=16)
 plt.rc("savefig", bbox="tight", dpi=200)
-plt.rc("axes", titlesize=16, titleweight="bold")
+plt.rc("figure", dpi=150, titlesize=18)
 plt.rcParams["figure.constrained_layout.use"] = True
 
 
