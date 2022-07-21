@@ -15,6 +15,8 @@ from time import perf_counter
 
 import matplotlib.pyplot as plt
 import numpy as np
+import plotly.express as px
+import plotly.io as pio
 from aviary.wren.utils import count_wyks, get_aflow_label_spglib
 from matminer.datasets import load_dataset
 from pymatgen.core import Structure
@@ -27,6 +29,8 @@ plt.rc("font", size=16)
 plt.rc("savefig", bbox="tight", dpi=200)
 plt.rc("figure", dpi=150, titlesize=18)
 plt.rcParams["figure.constrained_layout.use"] = True
+
+pio.templates.default = "plotly_white"
 
 
 # %%
@@ -42,7 +46,9 @@ df_grvh["crystal_sys"] = [get_crystal_sys(x) for x in df_grvh.spg_num]
 
 df_grvh["wyckoff"] = [
     get_aflow_label_spglib(struct)
-    for struct in tqdm(df_grvh.structure, desc="Getting Wyckoff strings for log_gvrh")
+    for struct in tqdm(
+        df_grvh.structure, desc="Getting matbench_log_gvrh Wyckoff strings"
+    )
 ]
 df_grvh["n_wyckoff"] = df_grvh.wyckoff.map(count_wyks)
 df_grvh["formula"] = [x.formula for x in df_grvh.structure]
@@ -136,4 +142,63 @@ plt.savefig("log_gvrh-spacegroup-hist.pdf")
 fig = spacegroup_sunburst(df_grvh.spg_num, show_counts="percent")
 fig.update_layout(title="Spacegroup sunburst of the JARVIS DFT 2D dataset")
 fig.write_image("log_gvrh-spacegroup-sunburst.pdf")
+fig.show()
+
+
+# %%
+plot_labels = {
+    "crystal_sys": "Crystal system",
+    "n": "Refractive index n",
+    "spg_num": "Space group",
+    "n_wyckoff": "Number of Wyckoff positions",
+}
+cry_sys_order = (
+    "cubic hexagonal trigonal tetragonal orthorhombic monoclinic triclinic".split()
+)
+
+
+# %%
+fig = px.violin(
+    df_grvh,
+    color="crystal_sys",
+    x="crystal_sys",
+    y="n_wyckoff",
+    labels=plot_labels,
+    points="all",
+    hover_data=["spg_num"],
+    hover_name="formula",
+    category_orders={"crystal_sys": cry_sys_order},
+    log_y=True,
+).update_traces(jitter=1)
+
+fig.update_layout(
+    title="Matbench dielectric: Number of Wyckoff positions by crystal system",
+    title_x=0.5,
+    margin=dict(b=10, l=10, r=10, t=50),
+    showlegend=False,
+    width=1000,
+    height=400,
+)
+
+
+def rgb_color(val: float, max: float) -> str:
+    """Convert a value between 0 and max to a color between red and blue."""
+    return f"rgb({255 * val / max:.1f}, 0, {255 * (max - val) / max:.1f})"
+
+
+x_ticks = {}
+for cry_sys, df_group in sorted(
+    df_grvh.groupby("crystal_sys"), key=lambda x: cry_sys_order.index(x[0])
+):
+    n_wyckoff_top = df_group.n_wyckoff.mean()
+    clr = rgb_color(n_wyckoff_top, 14)
+    x_ticks[cry_sys] = (
+        f"<b>{cry_sys}</b><br>"
+        f"{len(df_group):,} = {len(df_group)/len(df_grvh):.0%}<br>"
+        f"mean = <span style='color:{clr}'><b>{n_wyckoff_top:.1f}</b></span>"
+    )
+
+fig.update_layout(xaxis=dict(tickvals=list(range(7)), ticktext=list(x_ticks.values())))
+
+# fig.write_image("log_grvh-violin-num-wyckoffs.pdf")
 fig.show()

@@ -41,15 +41,17 @@ plt.rcParams["figure.constrained_layout.use"] = True
 df_diel = load_dataset("matbench_dielectric")
 
 df_diel[["spg_symbol", "spg_num"]] = [
-    struct.get_space_group_info() for struct in tqdm(df_diel.structure)
+    struct.get_space_group_info()
+    for struct in tqdm(df_diel.structure, desc="Getting spacegroups")
 ]
 
 df_diel["wyckoff"] = [
-    get_aflow_label_spglib(struct) for struct in tqdm(df_diel.structure)
+    get_aflow_label_spglib(struct)
+    for struct in tqdm(df_diel.structure, desc="Getting Wyckoff strings")
 ]
 df_diel["n_wyckoff"] = df_diel.wyckoff.map(count_wyks)
 
-df_diel["crystal_sys"] = [get_crystal_sys(x) for x in df_diel.spg_num]
+df_diel["crystal_sys"] = df_diel.spg_num.map(get_crystal_sys)
 
 df_diel["volume"] = [x.volume for x in df_diel.structure]
 df_diel["formula"] = [x.formula for x in df_diel.structure]
@@ -82,7 +84,7 @@ fig.show()
 
 
 # %%
-labels = {
+plot_labels = {
     "crystal_sys": "Crystal system",
     "n": "Refractive index n",
     "spg_num": "Space group",
@@ -99,16 +101,30 @@ fig = px.violin(
     color="crystal_sys",
     x="crystal_sys",
     y="n",
-    labels=labels,
+    labels=plot_labels,
     points="all",
     hover_data=["spg_num"],
     hover_name="formula",
 ).update_traces(jitter=1)
 fig.update_layout(
-    title="Refractive index distribution by crystal system",
+    title="<b>Refractive index distribution by crystal system</b>",
+    title_x=0.5,
     margin=dict(b=10, l=10, r=10, t=50),
     showlegend=False,
 )
+
+x_ticks = {}  # custom x axis tick labels
+for cry_sys, df_group in sorted(
+    df_diel.groupby("crystal_sys"), key=lambda x: cry_sys_order.index(x[0])
+):
+    x_ticks[cry_sys] = (
+        f"<b>{cry_sys}</b><br>"
+        f"{len(df_group):,} = {len(df_group)/len(df_diel):.0%}<br>"
+    )
+
+xaxis = dict(tickvals=list(range(len(cry_sys_order))), ticktext=list(x_ticks.values()))
+fig.update_layout(xaxis=xaxis)
+
 # fig.write_image("dielectric-violin.pdf")
 fig.show()
 
@@ -119,7 +135,7 @@ fig = px.violin(
     color="crystal_sys",
     x="crystal_sys",
     y="n_wyckoff",
-    labels=labels,
+    labels=plot_labels,
     points="all",
     hover_data=["spg_num"],
     hover_name="formula",
@@ -128,7 +144,7 @@ fig = px.violin(
 ).update_traces(jitter=1)
 
 fig.update_layout(
-    title="Matbench dielectric: Number of Wyckoff positions by crystal system",
+    title="<b>Matbench dielectric: Number of Wyckoff positions by crystal system</b>",
     title_x=0.5,
     margin=dict(b=10, l=10, r=10, t=50),
     showlegend=False,
@@ -137,27 +153,25 @@ fig.update_layout(
 )
 
 
-df_sorted_by_cry_sys = df_diel.sort_values(
-    "crystal_sys", key=lambda col: col.map(cry_sys_order.index)
-)
-
-
 def rgb_color(val: float, max: float) -> str:
     """Convert a value between 0 and max to a color between red and blue."""
     return f"rgb({255 * val / max:.1f}, 0, {255 * (max - val) / max:.1f})"
 
 
-n_top, x_ticks = 30, {x: "" for x in cry_sys_order}
-for cry_sys, df_group in df_sorted_by_cry_sys.groupby("crystal_sys"):
-    n_wyckoff_top = df_group.n_wyckoff.mean()
-    clr = rgb_color(n_wyckoff_top, 14)
+x_ticks = {}
+for cry_sys, df_group in sorted(
+    df_diel.groupby("crystal_sys"), key=lambda x: cry_sys_order.index(x[0])
+):
+    n_wyckoff = df_group.n_wyckoff.mean()
+    clr = rgb_color(n_wyckoff, 14)
     x_ticks[cry_sys] = (
         f"<b>{cry_sys}</b><br>"
-        f"{len(df_group):,} = {len(df_group)/len(df_sorted_by_cry_sys):.0%}<br>"
-        f"mean = <span style='color:{clr}'><b>{n_wyckoff_top:.1f}</b></span>"
+        f"{len(df_group):,} = {len(df_group)/len(df_diel):.0%}<br>"
+        f"mean = <span style='color:{clr}'><b>{n_wyckoff:.1f}</b></span>"
     )
 
-fig.update_layout(xaxis=dict(tickvals=list(range(7)), ticktext=list(x_ticks.values())))
+xaxis = dict(tickvals=list(range(7)), ticktext=list(x_ticks.values()))
+fig.update_layout(xaxis=xaxis)
 
 # fig.write_image("dielectric-violin-num-wyckoffs.pdf")
 fig.show()
@@ -169,7 +183,7 @@ fig = px.scatter(
     x="volume",
     y="n",
     color="crystal_sys",
-    labels=labels,
+    labels=plot_labels,
     size="n",
     hover_data=["spg_num"],
     hover_name="formula",
@@ -182,7 +196,6 @@ fig.update_layout(
 )
 # slightly increase scatter point size (lower sizeref means larger)
 fig.update_traces(marker_sizeref=0.08, selector=dict(mode="markers"))
-
 
 # fig.write_image("dielectric-scatter.pdf")
 fig.show()

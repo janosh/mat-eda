@@ -70,7 +70,7 @@ plt.savefig("expt-gap-ptable-heatmap.pdf")
 
 
 # %%
-labels = {
+plot_labels = {
     "n_atoms": "Atom Count",
     "n_elems": "Element Count",
     "gap expt": "Experimental band gap (eV)",
@@ -80,7 +80,7 @@ fig = px.scatter(
     x="n_atoms",
     y="gap expt",
     color="n_elems",
-    labels=labels,
+    labels=plot_labels,
     size="mean_mass",
     hover_name="composition",
     log_x=True,
